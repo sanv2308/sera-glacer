@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SERA — Recovery, engineered.</title>
+<meta name="description" content="BPC-157, GHK-Cu, TB-500 — characterized to identity and purity per batch. Members-only checkout." />
+
+<link rel="preload" href="../assets/vslblack.mp4?sync=5" as="video" type="video/mp4" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@200;300;400;500;600&family=Manrope:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="landing.css" />
+</head>
+<body>
+
+<svg class="filter-defs" aria-hidden="true">
+  <filter id="hero-grain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/>
+    <feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0 0.55 0"/>
+  </filter>
+</svg>
+
+<main class="stage" id="stage">
+
+  <!-- Cinema bottle layer — BPC-157 -->
+  <div class="cinema" aria-hidden="true">
+    <video class="cinema-base" id="cinemaBase" muted playsinline preload="auto">
+      <source src="../assets/vslblack.mp4?sync=5" type="video/mp4" />
+    </video>
+  </div>
+
+  <!-- Left-edge gradient so the typography sits on solid black -->
+  <div class="stage-veil" aria-hidden="true"></div>
+
+  <!-- Film grain -->
+  <div class="grain" aria-hidden="true">
+    <svg width="100%" height="100%" preserveAspectRatio="none">
+      <rect width="100%" height="100%" filter="url(#hero-grain)" opacity="0.06"></rect>
+    </svg>
+  </div>
+
+  <!-- Top nav -->
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="SERA, peptide research">
+      <img class="brand-logo" src="../sera-logo.png" alt="SERA" />
+    </a>
+    <nav class="navlinks" aria-label="Primary">
+      <a href="catalog.html">Catalog</a>
+      <a href="#protocols">Protocols</a>
+      <a href="#research">Research</a>
+      <a href="#account" class="nav-signin">Sign in <span aria-hidden="true">→</span></a>
+    </nav>
+  </header>
+
+  <!-- Hero content -->
+  <section class="hero" aria-labelledby="heroTitle">
+
+    <div class="hero-left">
+
+      <div class="eyebrow" data-rise style="--i:0">
+        <span class="eyebrow-rule"></span>
+        <span class="eyebrow-text">SR · 010 · PENTADECAPEPTIDE</span>
+      </div>
+
+      <h1 id="heroTitle" class="display" data-rise style="--i:1">
+        <span class="line-1">Recovery,</span>
+        <span class="line-2">engineered.</span>
+      </h1>
+
+      <p class="subhead" data-rise style="--i:2">BPC-157 · 10mg lyophilized · ≥99% HPLC · Janoshik-verified per batch.</p>
+
+      <p class="lede" data-rise style="--i:3">
+        A 15&#8209;amino&#8209;acid sequence derived from human gastric juice protein.
+        The research literature describes it as angiogenic and cytoprotective — the most
+        studied compound in the recovery class.
+      </p>
+
+      <div class="divider" data-rise style="--i:4"></div>
+
+      <!-- Inline data plate -->
+      <dl class="dataplate" data-rise style="--i:5">
+        <div class="dp-row"><dt>Compound</dt><dd>BPC-157</dd></div>
+        <div class="dp-row"><dt>Mass</dt><dd>10 mg · lyophilized</dd></div>
+        <div class="dp-row"><dt>Purity</dt><dd>≥99.2% HPLC</dd></div>
+        <div class="dp-row"><dt>Batch</dt><dd>SR&middot;251104</dd></div>
+        <div class="dp-row"><dt>Lab</dt><dd>Janoshik · ISO-17025</dd></div>
+        <div class="dp-row"><dt>COA</dt><dd><a class="dp-link" href="#coa">View <span aria-hidden="true">↗</span></a></dd></div>
+      </dl>
+
+      <div class="actions" data-rise style="--i:6">
+        <a class="btn-primary" href="../sera_club_catalog.html" id="enterCatalog">
+          <span class="btn-label">Purchase</span>
+          <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12 H19 M14 7 L19 12 L14 17"/>
+          </svg>
+        </a>
+        <a class="btn-quiet" href="catalog.html#all">View all compounds <span aria-hidden="true">→</span></a>
+      </div>
+
+      <p class="club-note" data-rise style="--i:7">
+        Members-only checkout · Free to join
+      </p>
+
+    </div>
+
+    <div class="hero-right" aria-hidden="true">
+      <!-- The cinema video already provides the bottle. This column reserves space
+           and hosts the vertical lot ticker. -->
+      <span class="lot-vertical">SERA &middot; CLUB &nbsp;|&nbsp; PEPTIDE RESEARCH &nbsp;&middot;&nbsp; SR&middot;BPC-157&middot;251104</span>
+    </div>
+
+  </section>
+
+  <!-- Below the bottle: three SKUs that anchor the launch -->
+  <section class="anchors" aria-label="Launch compounds">
+    <div class="anchors-inner">
+      <a class="anchor" href="../sera_club_catalog.html" data-page="1">
+        <span class="a-num">01</span>
+        <span class="a-name">BPC-157</span>
+        <span class="a-tag">Recovery · Pentadecapeptide</span>
+        <span class="a-mass">10 mg</span>
+      </a>
+      <a class="anchor" href="../sera_club_catalog.html" data-page="2">
+        <span class="a-num">02</span>
+        <span class="a-name">GHK-Cu</span>
+        <span class="a-tag">Dermal · Copper tripeptide</span>
+        <span class="a-mass">50 mg</span>
+      </a>
+      <a class="anchor" href="../sera_club_catalog.html" data-page="3">
+        <span class="a-num">03</span>
+        <span class="a-name">TB-500</span>
+        <span class="a-tag">Recovery · Thymosin β4 fragment</span>
+        <span class="a-mass">10 mg</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Trust strip — replaces the 4-icon-tile pattern with a quiet 4-line block -->
+  <section class="trust" aria-label="What every vial includes">
+    <div class="trust-inner">
+      <span class="trust-label">With every vial</span>
+      <ul class="trust-list">
+        <li><span class="t-num">01</span> Per-batch certificate of analysis</li>
+        <li><span class="t-num">02</span> 24h cold-pack shipping, US bottling</li>
+        <li><span class="t-num">03</span> Reshipment on damage or loss</li>
+        <li><span class="t-num">04</span> Members-only checkout, free to join</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="foot">
+    <span>Research use only · For laboratory research</span>
+    <span class="foot-id">SR · BPC-157 · 10mg</span>
+  </footer>
+
+  <!-- Floating scroll hint (auto-hides on scroll) -->
+  <div class="scroll-hint" id="scrollHint" aria-hidden="true">
+    <span class="sh-rule"></span>
+    <span class="sh-label">SCROLL</span>
+  </div>
+
+</main>
+
+<script src="landing.js" defer></script>
+</body>
+</html>

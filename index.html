@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sera Club | Premium Research Peptides</title>
+    <link rel="preload" href="assets/vslblack.mp4?sync=5" as="video" type="video/mp4" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <svg class="filter-defs" aria-hidden="true">
+      <filter id="goo">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="16" result="blur" />
+        <feColorMatrix
+          in="blur"
+          mode="matrix"
+          values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 24 -10"
+          result="goo"
+        />
+        <feBlend in="SourceGraphic" in2="goo" />
+      </filter>
+    </svg>
+
+    <main class="hero" data-blob-zone data-mode="goo">
+      <video class="hero-media hero-media--base" muted playsinline preload="auto" data-sync-base>
+        <source src="assets/vslblack.mp4?sync=5" type="video/mp4" />
+      </video>
+
+      <div class="reveal-layer" aria-hidden="true">
+        <video class="hero-media hero-media--reveal" muted playsinline preload="auto" data-sync-reveal>
+          <source src="assets/vslwhite.mp4?sync=5" type="video/mp4" />
+        </video>
+      </div>
+
+      <div class="cursor-blob" aria-hidden="true">
+        <span class="blob-core"></span>
+        <span class="blob-lobe blob-lobe--one"></span>
+        <span class="blob-lobe blob-lobe--two"></span>
+        <span class="blob-lobe blob-lobe--three"></span>
+      </div>
+
+      <div class="mode-switcher" role="group" aria-label="Blob reveal mode">
+        <button class="mode-button is-active" type="button" data-mode="goo" aria-pressed="true">Goo</button>
+        <button class="mode-button" type="button" data-mode="circle" aria-pressed="false">Circle</button>
+        <button class="mode-button" type="button" data-mode="comet" aria-pressed="false">Comet</button>
+        <button class="mode-button" type="button" data-mode="orbit" aria-pressed="false">Orbit</button>
+        <button class="mode-button" type="button" data-mode="halo" aria-pressed="false">Halo</button>
+        <button class="mode-button" type="button" data-mode="beam" aria-pressed="false">Beam</button>
+        <button class="mode-button" type="button" data-mode="bubbles" aria-pressed="false">Bubbles</button>
+        <button class="mode-button" type="button" data-mode="shard" aria-pressed="false">Shard</button>
+      </div>
+
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

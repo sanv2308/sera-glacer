@@ -1,0 +1,676 @@
+:root {
+  --blob-x: 50vw;
+  --blob-y: 50vh;
+  --blob-alpha: 0;
+  --blob-scale: 0.78;
+  --lobe-one-x: -94px;
+  --lobe-one-y: 26px;
+  --lobe-two-x: 82px;
+  --lobe-two-y: -42px;
+  --lobe-three-x: 46px;
+  --lobe-three-y: 86px;
+  --trail-x: 0px;
+  --trail-y: 0px;
+  color-scheme: dark;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  background: #030303;
+  overflow: hidden;
+}
+
+.filter-defs {
+  position: fixed;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  cursor: none;
+}
+
+.hero-media,
+.reveal-layer {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-media {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  pointer-events: none;
+}
+
+.hero-media--base {
+  z-index: 1;
+}
+
+.reveal-layer {
+  z-index: 2;
+  opacity: var(--blob-alpha);
+  clip-path: none;
+  transition: none;
+  will-change: opacity, mask-image, -webkit-mask-image;
+  -webkit-mask:
+    radial-gradient(
+      circle at var(--blob-x) var(--blob-y),
+      #000 0 104px,
+      rgba(0, 0, 0, 0.9) 120px,
+      transparent 167px
+    ),
+    radial-gradient(
+      circle at calc(var(--blob-x) + var(--lobe-one-x))
+        calc(var(--blob-y) + var(--lobe-one-y)),
+      #000 0 57px,
+      transparent 101px
+    ),
+    radial-gradient(
+      circle at calc(var(--blob-x) + var(--lobe-two-x))
+        calc(var(--blob-y) + var(--lobe-two-y)),
+      #000 0 66px,
+      transparent 113px
+    ),
+    radial-gradient(
+      circle at calc(var(--blob-x) + var(--lobe-three-x))
+        calc(var(--blob-y) + var(--lobe-three-y)),
+      #000 0 50px,
+      transparent 94px
+    );
+  mask:
+    radial-gradient(
+      circle at var(--blob-x) var(--blob-y),
+      #000 0 104px,
+      rgba(0, 0, 0, 0.9) 120px,
+      transparent 167px
+    ),
+    radial-gradient(
+      circle at calc(var(--blob-x) + var(--lobe-one-x))
+        calc(var(--blob-y) + var(--lobe-one-y)),
+      #000 0 57px,
+      transparent 101px
+    ),
+    radial-gradient(
+      circle at calc(var(--blob-x) + var(--lobe-two-x))
+        calc(var(--blob-y) + var(--lobe-two-y)),
+      #000 0 66px,
+      transparent 113px
+    ),
+    radial-gradient(
+      circle at calc(var(--blob-x) + var(--lobe-three-x))
+        calc(var(--blob-y) + var(--lobe-three-y)),
+      #000 0 50px,
+      transparent 94px
+    );
+}
+
+.hero[data-mode="circle"] .reveal-layer {
+  -webkit-mask: radial-gradient(
+    circle at var(--blob-x) var(--blob-y),
+    #000 0 46px,
+    transparent 47px
+  );
+  mask: radial-gradient(
+    circle at var(--blob-x) var(--blob-y),
+    #000 0 46px,
+    transparent 47px
+  );
+}
+
+.hero[data-mode="comet"] .reveal-layer {
+  -webkit-mask:
+    radial-gradient(
+      ellipse 190px 64px at calc(var(--blob-x) + var(--trail-x))
+        calc(var(--blob-y) + var(--trail-y)),
+      rgba(0, 0, 0, 0.86) 0 42%,
+      transparent 76%
+    ),
+    radial-gradient(
+      circle at var(--blob-x) var(--blob-y),
+      #000 0 58px,
+      transparent 100px
+    );
+  mask:
+    radial-gradient(
+      ellipse 190px 64px at calc(var(--blob-x) + var(--trail-x))
+        calc(var(--blob-y) + var(--trail-y)),
+      rgba(0, 0, 0, 0.86) 0 42%,
+      transparent 76%
+    ),
+    radial-gradient(
+      circle at var(--blob-x) var(--blob-y),
+      #000 0 58px,
+      transparent 100px
+    );
+}
+
+.hero[data-mode="orbit"] .reveal-layer {
+  -webkit-mask:
+    radial-gradient(
+      circle at var(--blob-x) var(--blob-y),
+      #000 0 48px,
+      transparent 76px
+    ),
+    radial-gradient(
+      circle at calc(var(--blob-x) + var(--lobe-one-x))
+        calc(var(--blob-y) + var(--lobe-one-y)),
+      #000 0 35px,
+      transparent 58px
+    ),
+    radial-gradient(
+      circle at calc(var(--blob-x) + var(--lobe-two-x))
+        calc(var(--blob-y) + var(--lobe-two-y)),
+      #000 0 30px,
+      transparent 52px
+    ),
+    radial-gradient(
+      circle at calc(var(--blob-x) + var(--lobe-three-x))
+        calc(var(--blob-y) + var(--lobe-three-y)),
+      #000 0 34px,
+      transparent 56px
+    );
+  mask:
+    radial-gradient(
+      circle at var(--blob-x) var(--blob-y),
+      #000 0 48px,
+      transparent 76px
+    ),
+    radial-gradient(
+      circle at calc(var(--blob-x) + var(--lobe-one-x))
+        calc(var(--blob-y) + var(--lobe-one-y)),
+      #000 0 35px,
+      transparent 58px
+    ),
+    radial-gradient(
+      circle at calc(var(--blob-x) + var(--lobe-two-x))
+        calc(var(--blob-y) + var(--lobe-two-y)),
+      #000 0 30px,
+      transparent 52px
+    ),
+    radial-gradient(
+      circle at calc(var(--blob-x) + var(--lobe-three-x))
+        calc(var(--blob-y) + var(--lobe-three-y)),
+      #000 0 34px,
+      transparent 56px
+    );
+}
+
+.hero[data-mode="halo"] .reveal-layer {
+  -webkit-mask: radial-gradient(
+    circle at var(--blob-x) var(--blob-y),
+    transparent 0 44px,
+    #000 46px 92px,
+    transparent 126px
+  );
+  mask: radial-gradient(
+    circle at var(--blob-x) var(--blob-y),
+    transparent 0 44px,
+    #000 46px 92px,
+    transparent 126px
+  );
+}
+
+.hero[data-mode="beam"] .reveal-layer {
+  -webkit-mask: radial-gradient(
+    ellipse 260px 32px at var(--blob-x) var(--blob-y),
+    #000 0 55%,
+    transparent 100%
+  );
+  mask: radial-gradient(
+    ellipse 260px 32px at var(--blob-x) var(--blob-y),
+    #000 0 55%,
+    transparent 100%
+  );
+}
+
+.hero[data-mode="bubbles"] .reveal-layer {
+  -webkit-mask:
+    radial-gradient(
+      circle at var(--blob-x) var(--blob-y),
+      #000 0 35px,
+      transparent 58px
+    ),
+    radial-gradient(
+      circle at calc(var(--blob-x) + var(--lobe-one-x))
+        calc(var(--blob-y) + var(--lobe-one-y)),
+      #000 0 30px,
+      transparent 52px
+    ),
+    radial-gradient(
+      circle at calc(var(--blob-x) + var(--lobe-two-x))
+        calc(var(--blob-y) + var(--lobe-two-y)),
+      #000 0 24px,
+      transparent 45px
+    ),
+    radial-gradient(
+      circle at calc(var(--blob-x) + var(--lobe-three-x))
+        calc(var(--blob-y) + var(--lobe-three-y)),
+      #000 0 28px,
+      transparent 48px
+    ),
+    radial-gradient(
+      circle at calc(var(--blob-x) - 38px) calc(var(--blob-y) - 42px),
+      #000 0 18px,
+      transparent 36px
+    ),
+    radial-gradient(
+      circle at calc(var(--blob-x) + 46px) calc(var(--blob-y) + 48px),
+      #000 0 20px,
+      transparent 38px
+    );
+  mask:
+    radial-gradient(
+      circle at var(--blob-x) var(--blob-y),
+      #000 0 35px,
+      transparent 58px
+    ),
+    radial-gradient(
+      circle at calc(var(--blob-x) + var(--lobe-one-x))
+        calc(var(--blob-y) + var(--lobe-one-y)),
+      #000 0 30px,
+      transparent 52px
+    ),
+    radial-gradient(
+      circle at calc(var(--blob-x) + var(--lobe-two-x))
+        calc(var(--blob-y) + var(--lobe-two-y)),
+      #000 0 24px,
+      transparent 45px
+    ),
+    radial-gradient(
+      circle at calc(var(--blob-x) + var(--lobe-three-x))
+        calc(var(--blob-y) + var(--lobe-three-y)),
+      #000 0 28px,
+      transparent 48px
+    ),
+    radial-gradient(
+      circle at calc(var(--blob-x) - 38px) calc(var(--blob-y) - 42px),
+      #000 0 18px,
+      transparent 36px
+    ),
+    radial-gradient(
+      circle at calc(var(--blob-x) + 46px) calc(var(--blob-y) + 48px),
+      #000 0 20px,
+      transparent 38px
+    );
+}
+
+.hero[data-mode="shard"] .reveal-layer {
+  -webkit-mask: none;
+  mask: none;
+  clip-path: polygon(
+    calc(var(--blob-x) - 24px) calc(var(--blob-y) - 112px),
+    calc(var(--blob-x) + 128px) calc(var(--blob-y) - 34px),
+    calc(var(--blob-x) + 42px) calc(var(--blob-y) + 120px),
+    calc(var(--blob-x) - 112px) calc(var(--blob-y) + 26px)
+  );
+}
+
+.hero-media--reveal {
+  filter: saturate(0.82) contrast(1.08) brightness(1.02);
+}
+
+.cursor-blob {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  width: 219px;
+  height: 219px;
+  opacity: var(--blob-alpha);
+  pointer-events: none;
+  transform: translate3d(calc(var(--blob-x) - 50%), calc(var(--blob-y) - 50%), 0) scale(var(--blob-scale));
+  transition: none;
+  filter: url("#goo");
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+}
+
+.cursor-blob::before,
+.cursor-blob::after {
+  position: absolute;
+  content: "";
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.cursor-blob span {
+  position: absolute;
+  display: block;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow:
+    0 0 44px rgba(255, 255, 255, 0.28),
+    inset 0 0 32px rgba(255, 255, 255, 0.18);
+}
+
+.blob-core {
+  inset: 34px;
+}
+
+.blob-lobe--one {
+  width: 96px;
+  height: 96px;
+  left: 11px;
+  top: 79px;
+}
+
+.blob-lobe--two {
+  width: 109px;
+  height: 109px;
+  right: 15px;
+  top: 24px;
+}
+
+.blob-lobe--three {
+  width: 87px;
+  height: 87px;
+  right: 41px;
+  bottom: 8px;
+}
+
+.hero[data-mode="circle"] .cursor-blob {
+  width: 92px;
+  height: 92px;
+  filter: none;
+  mix-blend-mode: normal;
+}
+
+.hero[data-mode="circle"] .cursor-blob span {
+  display: none;
+}
+
+.hero[data-mode="circle"] .cursor-blob::before {
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 0 18px rgba(255, 255, 255, 0.18),
+    inset 0 0 18px rgba(255, 255, 255, 0.16);
+}
+
+.hero[data-mode="comet"] .cursor-blob {
+  width: 260px;
+  height: 142px;
+  filter: blur(1px);
+  mix-blend-mode: screen;
+}
+
+.hero[data-mode="comet"] .cursor-blob span {
+  display: none;
+}
+
+.hero[data-mode="comet"] .cursor-blob::before {
+  inset: 20px 16px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.22));
+  filter: blur(14px);
+  transform: translate3d(var(--trail-x), var(--trail-y), 0);
+}
+
+.hero[data-mode="comet"] .cursor-blob::after {
+  right: 36px;
+  top: 34px;
+  width: 72px;
+  height: 72px;
+  background: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 0 42px rgba(255, 255, 255, 0.32);
+}
+
+.hero[data-mode="orbit"] .cursor-blob {
+  width: 220px;
+  height: 220px;
+  filter: none;
+  mix-blend-mode: screen;
+}
+
+.hero[data-mode="orbit"] .cursor-blob span {
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.24);
+}
+
+.hero[data-mode="orbit"] .blob-core {
+  inset: 80px;
+}
+
+.hero[data-mode="orbit"] .blob-lobe--one {
+  left: 28px;
+  top: 90px;
+  width: 46px;
+  height: 46px;
+}
+
+.hero[data-mode="orbit"] .blob-lobe--two {
+  right: 44px;
+  top: 34px;
+  width: 40px;
+  height: 40px;
+}
+
+.hero[data-mode="orbit"] .blob-lobe--three {
+  right: 50px;
+  bottom: 34px;
+  width: 44px;
+  height: 44px;
+}
+
+.hero[data-mode="halo"] .cursor-blob {
+  width: 210px;
+  height: 210px;
+  filter: none;
+  mix-blend-mode: screen;
+}
+
+.hero[data-mode="halo"] .cursor-blob span {
+  display: none;
+}
+
+.hero[data-mode="halo"] .cursor-blob::before {
+  inset: 40px;
+  border: 22px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  box-shadow:
+    0 0 34px rgba(255, 255, 255, 0.24),
+    inset 0 0 28px rgba(255, 255, 255, 0.18);
+}
+
+.hero[data-mode="beam"] .cursor-blob {
+  width: 320px;
+  height: 86px;
+  filter: none;
+  mix-blend-mode: screen;
+}
+
+.hero[data-mode="beam"] .cursor-blob span {
+  display: none;
+}
+
+.hero[data-mode="beam"] .cursor-blob::before {
+  left: 18px;
+  right: 18px;
+  top: 29px;
+  height: 28px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.26);
+}
+
+.hero[data-mode="bubbles"] .cursor-blob {
+  width: 190px;
+  height: 190px;
+  filter: url("#goo");
+  mix-blend-mode: screen;
+}
+
+.hero[data-mode="bubbles"] .cursor-blob span {
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 22px rgba(255, 255, 255, 0.26);
+}
+
+.hero[data-mode="bubbles"] .blob-core {
+  inset: 68px;
+}
+
+.hero[data-mode="bubbles"] .blob-lobe--one {
+  left: 30px;
+  top: 58px;
+  width: 52px;
+  height: 52px;
+}
+
+.hero[data-mode="bubbles"] .blob-lobe--two {
+  right: 36px;
+  top: 38px;
+  width: 42px;
+  height: 42px;
+}
+
+.hero[data-mode="bubbles"] .blob-lobe--three {
+  right: 44px;
+  bottom: 34px;
+  width: 48px;
+  height: 48px;
+}
+
+.hero[data-mode="shard"] .cursor-blob {
+  width: 240px;
+  height: 240px;
+  filter: none;
+  mix-blend-mode: screen;
+}
+
+.hero[data-mode="shard"] .cursor-blob span {
+  display: none;
+}
+
+.hero[data-mode="shard"] .cursor-blob::before {
+  inset: 44px 38px;
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.16);
+  clip-path: polygon(40% 0, 100% 28%, 60% 100%, 0 44%);
+  box-shadow: 0 0 28px rgba(255, 255, 255, 0.2);
+}
+
+.mode-switcher {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 6;
+  display: inline-flex;
+  max-width: min(calc(100vw - 32px), 650px);
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  padding: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 24px;
+  background: rgba(0, 0, 0, 0.44);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.32);
+  transform: translateX(-50%);
+  backdrop-filter: blur(18px);
+  cursor: auto;
+}
+
+.mode-button {
+  min-width: 72px;
+  min-height: 34px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.68);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.mode-button:hover,
+.mode-button:focus-visible {
+  color: #fff;
+}
+
+.mode-button:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 2px;
+}
+
+.mode-button.is-active {
+  background: rgba(255, 255, 255, 0.9);
+  color: #070707;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .hero {
+    cursor: auto;
+  }
+
+  .reveal-layer {
+    opacity: 0.22;
+    -webkit-mask: linear-gradient(#000, #000);
+    mask: linear-gradient(#000, #000);
+  }
+
+  .cursor-blob {
+    display: none;
+  }
+
+  .mode-switcher {
+    bottom: 16px;
+  }
+}
+
+@media (max-width: 820px) {
+  body {
+    overflow: hidden;
+  }
+
+  .hero {
+    min-height: 100svh;
+  }
+
+  .mode-switcher {
+    width: calc(100% - 24px);
+    justify-content: center;
+  }
+
+  .mode-button {
+    min-width: 0;
+    flex: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+
+  .cursor-blob,
+  .reveal-layer {
+    transition: none;
+  }
+}

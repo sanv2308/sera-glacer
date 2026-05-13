@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SERA — All Compounds · Research Catalog</title>
+<meta name="description" content="Thirteen compounds, each characterized to identity and purity by an independent laboratory. Browse by mechanism." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@200;300;400;500;600&family=Manrope:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="landing.css" />
+<link rel="stylesheet" href="catalog.css" />
+</head>
+<body class="catalog-page">
+
+<svg class="filter-defs" aria-hidden="true">
+  <filter id="catalog-grain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/>
+    <feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0 0.55 0"/>
+  </filter>
+</svg>
+
+<div class="grain catalog-grain" aria-hidden="true">
+  <svg width="100%" height="100%" preserveAspectRatio="none">
+    <rect width="100%" height="100%" filter="url(#catalog-grain)" opacity="0.05"></rect>
+  </svg>
+</div>
+
+<header class="topbar catalog-topbar">
+  <a class="brand" href="index.html" aria-label="SERA, peptide research">
+    <img class="brand-logo" src="../sera-logo.png" alt="SERA" />
+  </a>
+  <nav class="navlinks" aria-label="Primary">
+    <a href="catalog.html" class="is-active">Catalog</a>
+    <a href="#protocols">Protocols</a>
+    <a href="#research">Research</a>
+    <a href="#account" class="nav-signin">Sign in <span aria-hidden="true">→</span></a>
+  </nav>
+</header>
+
+<!-- Catalog header — editorial, table-of-contents tone -->
+<section class="cat-header">
+  <div class="cat-header-inner">
+    <div class="cat-eyebrow">
+      <span class="ce-rule"></span>
+      <span class="ce-text">SR · INDEX · MMXXVI</span>
+    </div>
+    <h1 class="cat-display">
+      <span>All</span>
+      <span class="cat-display-italic">Compounds.</span>
+    </h1>
+    <p class="cat-sub">
+      Thirteen compounds, each characterized to identity and purity by an
+      independent laboratory. Browse by mechanism.
+    </p>
+
+    <!-- Category jump-nav. Acts as filter chips on click. -->
+    <nav class="cat-filter" aria-label="Filter by category" id="catFilter">
+      <button type="button" data-filter="all" class="is-active">All <span class="cf-count">13</span></button>
+      <button type="button" data-filter="recovery">Recovery <span class="cf-count">2</span></button>
+      <button type="button" data-filter="gh-axis">GH Axis <span class="cf-count">3</span></button>
+      <button type="button" data-filter="metabolic">Metabolic <span class="cf-count">3</span></button>
+      <button type="button" data-filter="dermal">Dermal <span class="cf-count">3</span></button>
+      <button type="button" data-filter="longevity">Longevity <span class="cf-count">1</span></button>
+      <button type="button" data-filter="foundations">Foundations <span class="cf-count">1</span></button>
+    </nav>
+  </div>
+</section>
+
+<main class="cat-main">
+
+  <!-- ───────────────────────  RECOVERY  ─────────────────────── -->
+  <section class="cat-section" data-category="recovery" aria-labelledby="cat-recovery">
+    <header class="cat-section-head">
+      <span class="cs-num">01</span>
+      <h2 id="cat-recovery" class="cs-name">Recovery <span class="cs-amp">&amp;</span> Repair</h2>
+      <p class="cs-blurb">
+        Angiogenic and cytoprotective compounds — the most-studied class in the
+        research-peptide literature.
+      </p>
+    </header>
+
+    <ul class="cat-grid">
+
+      <li class="cat-card" data-hue="blue">
+        <a class="card-link" href="../sera_club_catalog.html#bpc-157">
+          <figure class="card-fig">
+            <img src="../assets/sera-catalog-listings-imgs/bpc-157.png" alt="BPC-157 10mg vial" loading="lazy" />
+          </figure>
+          <div class="card-body">
+            <span class="card-num">01·01</span>
+            <h3 class="card-name">BPC-157</h3>
+            <p class="card-class">Pentadecapeptide</p>
+            <div class="card-line">
+              <span class="card-mass">10 mg</span>
+              <span class="card-purity">≥99% HPLC</span>
+            </div>
+            <p class="card-desc">15&#8209;amino&#8209;acid sequence derived from human gastric juice protein. Angiogenic.</p>
+            <span class="card-cta">Open monograph <span aria-hidden="true">→</span></span>
+          </div>
+        </a>
+      </li>
+
+      <li class="cat-card" data-hue="tan">
+        <a class="card-link" href="../sera_club_catalog.html#tb-500">
+          <figure class="card-fig">
+            <img src="../assets/sera-catalog-listings-imgs/tb-500.png" alt="TB-500 10mg vial" loading="lazy" />
+          </figure>
+          <div class="card-body">
+            <span class="card-num">01·02</span>
+            <h3 class="card-name">TB-500</h3>
+            <p class="card-class">Thymosin β4 fragment</p>
+            <div class="card-line">
+              <span class="card-mass">10 mg</span>
+              <span class="card-purity">≥98% HPLC</span>
+            </div>
+            <p class="card-desc">Drives cell migration to injury sites and supports microvasculature formation.</p>
+            <span class="card-cta">Open monograph <span aria-hidden="true">→</span></span>
+          </div>
+        </a>
+      </li>
+
+    </ul>
+  </section>
+
+  <!-- ───────────────────────  GH AXIS  ─────────────────────── -->
+  <section class="cat-section" data-category="gh-axis" aria-labelledby="cat-gh">
+    <header class="cat-section-head">
+      <span class="cs-num">02</span>
+      <h2 id="cat-gh" class="cs-name">GH Axis</h2>
+      <p class="cs-blurb">
+        Peptides acting at distinct nodes of the somatotropic axis —
+        hypothalamic GHRH through hepatic IGF-1.
+      </p>
+    </header>
+
+    <ul class="cat-grid">
+
+      <li class="cat-card" data-hue="blue-mid">
+        <a class="card-link" href="#cjc-ipamorelin">
+          <figure class="card-fig">
+            <img src="../assets/sera-catalog-listings-imgs/cjc-ipamorelin.png" alt="CJC-1295 with Ipamorelin vial" loading="lazy" />
+          </figure>
+          <div class="card-body">
+            <span class="card-num">02·01</span>
+            <h3 class="card-name">CJC-1295 <span class="card-name-sub">/ Ipamorelin</span></h3>
+            <p class="card-class">GHRH analog · GHRP blend</p>
+            <div class="card-line">
+              <span class="card-mass">10 mg</span>
+              <span class="card-purity">≥99% HPLC</span>
+            </div>
+            <p class="card-desc">Paired GHRH/GHRP stimulation of endogenous GH release — the foundation stack.</p>
+            <span class="card-cta">Open monograph <span aria-hidden="true">→</span></span>
+          </div>
+        </a>
+      </li>
+
+      <li class="cat-card" data-hue="grey-cool">
+        <a class="card-link" href="#tesamorelin">
+          <figure class="card-fig">
+            <img src="../assets/sera-catalog-listings-imgs/tesamorelin.png" alt="Tesamorelin 10mg vial" loading="lazy" />
+          </figure>
+          <div class="card-body">
+            <span class="card-num">02·02</span>
+            <h3 class="card-name">Tesamorelin</h3>
+            <p class="card-class">GHRH analog</p>
+            <div class="card-line">
+              <span class="card-mass">10 mg</span>
+              <span class="card-purity">≥99% HPLC</span>
+            </div>
+            <p class="card-desc">Stabilized GHRH analog studied for visceral adiposity in clinical trial literature.</p>
+            <span class="card-cta">Open monograph <span aria-hidden="true">→</span></span>
+          </div>
+        </a>
+      </li>
+
+      <li class="cat-card" data-hue="cyan">
+        <a class="card-link" href="#igf-lr3">
+          <figure class="card-fig">
+            <img src="../assets/sera-catalog-listings-imgs/igf-lr3.png" alt="IGF-LR3 1mg vial" loading="lazy" />
+          </figure>
+          <div class="card-body">
+            <span class="card-num">02·03</span>
+            <h3 class="card-name">IGF-LR3</h3>
+            <p class="card-class">IGF-1 analog · long-arginine 3</p>
+            <div class="card-line">
+              <span class="card-mass">1 mg</span>
+              <span class="card-purity">≥99% HPLC</span>
+            </div>
+            <p class="card-desc">Long-acting IGF-1 analog with extended half-life and reduced binding-protein affinity.</p>
+            <span class="card-cta">Open monograph <span aria-hidden="true">→</span></span>
+          </div>
+        </a>
+      </li>
+
+    </ul>
+  </section>
+
+  <!-- ───────────────────────  METABOLIC  ─────────────────────── -->
+  <section class="cat-section" data-category="metabolic" aria-labelledby="cat-metabolic">
+    <header class="cat-section-head">
+      <span class="cs-num">03</span>
+      <h2 id="cat-metabolic" class="cs-name">Metabolic</h2>
+      <p class="cs-blurb">
+        Energy partitioning, glucose handling, and body-composition compounds.
+        The most actively researched class as of 2026.
+      </p>
+    </header>
+
+    <ul class="cat-grid">
+
+      <li class="cat-card" data-hue="rose">
+        <a class="card-link" href="#mots-c">
+          <figure class="card-fig">
+            <img src="../assets/sera-catalog-listings-imgs/mots-c.png" alt="MOTS-c 10mg vial" loading="lazy" />
+          </figure>
+          <div class="card-body">
+            <span class="card-num">03·01</span>
+            <h3 class="card-name">MOTS-c</h3>
+            <p class="card-class">Mitochondrial-derived peptide</p>
+            <div class="card-line">
+              <span class="card-mass">10 mg</span>
+              <span class="card-purity">≥99% HPLC</span>
+            </div>
+            <p class="card-desc">16-residue peptide encoded by mitochondrial DNA — studied for insulin sensitivity.</p>
+            <span class="card-cta">Open monograph <span aria-hidden="true">→</span></span>
+          </div>
+        </a>
+      </li>
+
+      <li class="cat-card" data-hue="grey-warm">
+        <a class="card-link" href="#5-amino-1mq">
+          <figure class="card-fig">
+            <img src="../assets/sera-catalog-listings-imgs/5-amino-1mq.png" alt="5-Amino-1MQ 5mg vial" loading="lazy" />
+          </figure>
+          <div class="card-body">
+            <span class="card-num">03·02</span>
+            <h3 class="card-name">5-Amino 1-MQ</h3>
+            <p class="card-class">NNMT inhibitor · small molecule</p>
+            <div class="card-line">
+              <span class="card-mass">5 mg</span>
+              <span class="card-purity">≥99% HPLC</span>
+            </div>
+            <p class="card-desc">Selective inhibitor of nicotinamide N-methyltransferase. Oral-bioavailable.</p>
+            <span class="card-cta">Open monograph <span aria-hidden="true">→</span></span>
+          </div>
+        </a>
+      </li>
+
+      <li class="cat-card" data-hue="gold">
+        <a class="card-link" href="#glp-3">
+          <figure class="card-fig">
+            <img src="../assets/sera-catalog-listings-imgs/glp-3.png" alt="GLP-3 10mg vial" loading="lazy" />
+          </figure>
+          <div class="card-body">
+            <span class="card-num">03·03</span>
+            <h3 class="card-name">GLP-3</h3>
+            <p class="card-class">Triple-agonist analog · GLP-1 / GIP / glucagon</p>
+            <div class="card-line">
+              <span class="card-mass">10 mg</span>
+              <span class="card-purity">≥99% HPLC</span>
+            </div>
+            <p class="card-desc">Retatrutide-class triple-receptor agonist in active clinical investigation.</p>
+            <span class="card-cta">Open monograph <span aria-hidden="true">→</span></span>
+          </div>
+        </a>
+      </li>
+
+    </ul>
+  </section>
+
+  <!-- ───────────────────────  DERMAL  ─────────────────────── -->
+  <section class="cat-section" data-category="dermal" aria-labelledby="cat-dermal">
+    <header class="cat-section-head">
+      <span class="cs-num">04</span>
+      <h2 id="cat-dermal" class="cs-name">Dermal <span class="cs-amp">&amp;</span> Regenerative</h2>
+      <p class="cs-blurb">
+        Copper-tripeptide chemistry and the multi-peptide blends that build on it.
+      </p>
+    </header>
+
+    <ul class="cat-grid">
+
+      <li class="cat-card" data-hue="lavender">
+        <a class="card-link" href="../sera_club_catalog.html#ghk-cu">
+          <figure class="card-fig">
+            <img src="../assets/sera-catalog-listings-imgs/ghk-cu.png" alt="GHK-Cu 50mg vial" loading="lazy" />
+          </figure>
+          <div class="card-body">
+            <span class="card-num">04·01</span>
+            <h3 class="card-name">GHK-Cu</h3>
+            <p class="card-class">Copper tripeptide</p>
+            <div class="card-line">
+              <span class="card-mass">50 mg</span>
+              <span class="card-purity">≥99% HPLC</span>
+            </div>
+            <p class="card-desc">Three amino acids bound to a copper ion. Modulates expression of thousands of genes.</p>
+            <span class="card-cta">Open monograph <span aria-hidden="true">→</span></span>
+          </div>
+        </a>
+      </li>
+
+      <li class="cat-card" data-hue="gold-deep">
+        <a class="card-link" href="#glow">
+          <figure class="card-fig">
+            <img src="../assets/sera-catalog-listings-imgs/glow.png" alt="GLOW 70mg vial" loading="lazy" />
+          </figure>
+          <div class="card-body">
+            <span class="card-num">04·02</span>
+            <h3 class="card-name">GLOW</h3>
+            <p class="card-class">GHK-Cu · BPC-157 · TB-500 blend</p>
+            <div class="card-line">
+              <span class="card-mass">70 mg</span>
+              <span class="card-purity">≥99% HPLC</span>
+            </div>
+            <p class="card-desc">Three-peptide regenerative blend — dermal lead, systemic support.</p>
+            <span class="card-cta">Open monograph <span aria-hidden="true">→</span></span>
+          </div>
+        </a>
+      </li>
+
+      <li class="cat-card" data-hue="rose-deep">
+        <a class="card-link" href="#klow">
+          <figure class="card-fig">
+            <img src="../assets/sera-catalog-listings-imgs/klow.png" alt="KLOW 80mg vial" loading="lazy" />
+          </figure>
+          <div class="card-body">
+            <span class="card-num">04·03</span>
+            <h3 class="card-name">KLOW</h3>
+            <p class="card-class">GHK-Cu · KPV · BPC-157 · TB-500 blend</p>
+            <div class="card-line">
+              <span class="card-mass">80 mg</span>
+              <span class="card-purity">≥99% HPLC</span>
+            </div>
+            <p class="card-desc">Four-peptide blend — dermal, regenerative, and immune-modulatory in one vial.</p>
+            <span class="card-cta">Open monograph <span aria-hidden="true">→</span></span>
+          </div>
+        </a>
+      </li>
+
+    </ul>
+  </section>
+
+  <!-- ───────────────────────  LONGEVITY  ─────────────────────── -->
+  <section class="cat-section" data-category="longevity" aria-labelledby="cat-longevity">
+    <header class="cat-section-head">
+      <span class="cs-num">05</span>
+      <h2 id="cat-longevity" class="cs-name">Longevity</h2>
+      <p class="cs-blurb">
+        Broad cellular-maintenance compounds — coenzymes and substrates of the
+        sirtuin / NAD axis.
+      </p>
+    </header>
+
+    <ul class="cat-grid">
+
+      <li class="cat-card" data-hue="violet">
+        <a class="card-link" href="#nad">
+          <figure class="card-fig">
+            <img src="../assets/sera-catalog-listings-imgs/nad.png" alt="NAD+ 100mg vial" loading="lazy" />
+          </figure>
+          <div class="card-body">
+            <span class="card-num">05·01</span>
+            <h3 class="card-name">NAD+</h3>
+            <p class="card-class">Coenzyme · nicotinamide adenine dinucleotide</p>
+            <div class="card-line">
+              <span class="card-mass">100 mg</span>
+              <span class="card-purity">≥99% HPLC</span>
+            </div>
+            <p class="card-desc">Central redox cofactor and substrate for sirtuins, PARPs, and CD38.</p>
+            <span class="card-cta">Open monograph <span aria-hidden="true">→</span></span>
+          </div>
+        </a>
+      </li>
+
+    </ul>
+  </section>
+
+  <!-- ───────────────────────  FOUNDATIONS  ─────────────────────── -->
+  <section class="cat-section" data-category="foundations" aria-labelledby="cat-foundations">
+    <header class="cat-section-head">
+      <span class="cs-num">06</span>
+      <h2 id="cat-foundations" class="cs-name">Foundations</h2>
+      <p class="cs-blurb">
+        Reconstitution. The base layer every peptide protocol depends on.
+      </p>
+    </header>
+
+    <ul class="cat-grid">
+
+      <li class="cat-card" data-hue="blue-pale">
+        <a class="card-link" href="#sera-h2o">
+          <figure class="card-fig">
+            <img src="../assets/sera-catalog-listings-imgs/sera-h2o.png" alt="SERA H₂O 10mL bacteriostatic water" loading="lazy" />
+          </figure>
+          <div class="card-body">
+            <span class="card-num">06·01</span>
+            <h3 class="card-name">SERA H₂O</h3>
+            <p class="card-class">Bacteriostatic water · 0.9% benzyl alcohol</p>
+            <div class="card-line">
+              <span class="card-mass">10 mL</span>
+              <span class="card-purity">USP &lt;71&gt;</span>
+            </div>
+            <p class="card-desc">Sterile reconstitution solvent. Multi-entry preservation. The base of the catalog.</p>
+            <span class="card-cta">Open monograph <span aria-hidden="true">→</span></span>
+          </div>
+        </a>
+      </li>
+
+    </ul>
+  </section>
+
+  <!-- Footer note -->
+  <section class="cat-outro">
+    <div class="cat-outro-inner">
+      <p class="outro-eyebrow">Members-only checkout · Free to join</p>
+      <h2 class="outro-display">
+        Documented<br/><span class="outro-italic">to the batch.</span>
+      </h2>
+      <p class="outro-body">
+        Each compound is shipped with a per-batch certificate of analysis by an
+        ISO-17025 independent laboratory. Reshipment on damage or loss, no
+        questions. US bottling, cold-pack logistics.
+      </p>
+      <a class="btn-primary" href="#account">
+        <span class="btn-label">Create account</span>
+        <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12 H19 M14 7 L19 12 L14 17"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot catalog-foot">
+  <span>Research use only · For laboratory research</span>
+  <span class="foot-id">SR · INDEX · 13 / 13</span>
+</footer>
+
+<script src="catalog.js" defer></script>
+</body>
+</html>
