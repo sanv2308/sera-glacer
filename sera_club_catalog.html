@@ -103,6 +103,10 @@
   .cinema-media--reverse {
     opacity: 0;
   }
+  .cinema-media--forward,
+  .cinema-media--reverse {
+    transition: opacity 60ms linear;
+  }
   .bottle.is-reverse .cinema-media--forward {
     opacity: 0;
   }
@@ -794,6 +798,16 @@
     display: none;
   }
 
+  /* Scroll-triggered slide to full catalog page */
+  .stage {
+    transition: transform .32s cubic-bezier(.4,0,.2,1), opacity .32s ease;
+  }
+  .stage.is-exiting-to-catalog {
+    transform: translateX(-100vw);
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
   /* Rocks landscape background */
   .catalog-bg {
     position: absolute;
@@ -817,19 +831,20 @@
     mix-blend-mode: lighten;
     z-index: 2;
     pointer-events: none;
-    filter: brightness(0.92);
-    transition: filter .55s cubic-bezier(.32,.72,.24,1),
-                transform .7s cubic-bezier(.32,.72,.24,1),
-                opacity .65s cubic-bezier(.32,.72,.24,1);
+    opacity: 0.92;
+    transition: transform .45s cubic-bezier(.32,.72,.24,1),
+                opacity .35s cubic-bezier(.32,.72,.24,1);
+    transform: translate3d(0,0,0);
     transform-origin: center center;
+    will-change: opacity, transform;
+    backface-visibility: hidden;
   }
   .catalog-bottle.is-hover {
-    filter: brightness(1.18) saturate(1.05);
-    transform: translateY(-4px) scale(1.015);
+    opacity: 1;
+    transform: translate3d(0,-4px,0) scale(1.015);
   }
   .catalog-bottle.is-dim {
-    filter: brightness(0.55);
-    opacity: 0.7;
+    opacity: 0.35;
   }
 
   /* Glow halos — radial gradient behind each bottle */
@@ -841,14 +856,13 @@
     pointer-events: none;
     opacity: 0;
     z-index: 1;
-    transform: translate(-50%, -50%) scale(0.85);
-    transition: opacity .55s cubic-bezier(.32,.72,.24,1),
-                transform .65s cubic-bezier(.32,.72,.24,1);
-    filter: blur(60px);
+    transform: translate3d(-50%, -50%, 0);
+    transition: opacity .45s cubic-bezier(.32,.72,.24,1);
+    filter: blur(48px);
+    will-change: opacity;
   }
   .card-glow.is-on {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
   }
   .card-glow[data-target="0"] {
     left: 12%; top: 75%;
@@ -951,16 +965,15 @@
   .catalog-card[data-target="1"]:hover .card-tag { color: #c5b3da; }
   .catalog-card[data-target="2"]:hover .card-tag { color: #c9a87b; }
 
-  /* Catalog header — top of the page */
+  /* Catalog header — left rail, clear of the topbar logo and BPC-157 hit area (top:55%) */
   .catalog-header {
     position: absolute;
-    top: 8%;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 17%;
+    left: 5%;
     z-index: 5;
-    text-align: center;
-    max-width: 560px;
-    padding: 0 24px;
+    text-align: left;
+    max-width: 360px;
+    padding: 0 24px 0 4px;
   }
   .catalog-eyebrow {
     display: block;
@@ -969,15 +982,15 @@
     letter-spacing: 0.4em;
     color: var(--ink-mute);
     text-transform: uppercase;
-    margin-bottom: 18px;
+    margin-bottom: 14px;
   }
   .catalog-title {
     font-family: var(--display);
     font-weight: 200;
-    font-size: clamp(38px, 5.5vw, 64px);
+    font-size: clamp(32px, 4.4vw, 52px);
     letter-spacing: -0.02em;
     line-height: 1;
-    margin: 0 0 12px;
+    margin: 0 0 10px;
     color: var(--ink);
   }
   .catalog-sub {
@@ -987,6 +1000,20 @@
     font-weight: 300;
     margin: 0;
     letter-spacing: 0.04em;
+    line-height: 1.5;
+    max-width: 320px;
+    margin-right: auto;
+  }
+  @media (max-width: 900px) {
+    .catalog-header {
+      top: 14%;
+      left: 4%;
+      right: 4%;
+      max-width: none;
+      text-align: center;
+      padding: 0 8px;
+    }
+    .catalog-sub { margin-left: auto; margin-right: auto; }
   }
 
   .catalog-listings {
@@ -1716,10 +1743,21 @@
     }).catch(() => {});
   }
 
+  function primeForwardScene(layer, time) {
+    const videos = getSceneVideos(layer, 'forward');
+    if (!videos.length) return Promise.resolve();
+
+    const targetTime = snapSceneTime(time);
+    return Promise.all(videos.map(video => whenVideoReady(video))).then(() => {
+      return cueVideos(videos, targetTime);
+    }).catch(() => {});
+  }
+
   function getSceneDurationMs(start, target, options = {}) {
     const distance = Math.abs(target - start);
     const baseDuration = Math.min(Math.max(distance * 420, 900), 2800);
-    if (options.smoothReverse && target < start) {
+    const rateLimit = (options.smoothReverse && target < start) || target > start;
+    if (rateLimit) {
       const rateLimitedDuration = Math.ceil((distance / SCENE_DETAIL_REVERSE_MAX_RATE) * 1000);
       return Math.min(Math.max(baseDuration, rateLimitedDuration), SCENE_DETAIL_REVERSE_MAX_DURATION);
     }
@@ -1774,6 +1812,7 @@
       video.playbackRate = 1;
     });
     pendingForwardHandoffTime = null;
+    primeForwardScene(layer, targetTime);
     return Promise.resolve();
   }
 
@@ -1798,53 +1837,105 @@
     getSceneVideos(layer, 'reverse').forEach(video => video.pause());
 
     return cueScene(layer, { sceneTime: start }).then(() => new Promise((resolve) => {
-      layer.classList.remove('is-reverse');
+      if (tween.cancelled) {
+        videos.forEach(video => video.pause());
+        resolve();
+        return;
+      }
+
+      const wasReverse = layer.classList.contains('is-reverse');
       videos.forEach(video => {
         video.pause();
         video.playbackRate = rate;
       });
 
+      const swapToForward = () => {
+        if (layer.classList.contains('is-reverse')) {
+          layer.classList.remove('is-reverse');
+        }
+      };
+
+      if (!wasReverse) swapToForward();
+
       Promise.all(videos.map(video => playVideo(video))).then(results => {
-        if (tween.cancelled) {
-          videos.forEach(video => video.pause());
-          resolve();
-          return;
-        }
-
-        if (results.some(result => !result) || videos[0].paused) {
-          scrubScene(layer, start, target, durationMs, tween).then(resolve);
-          return;
-        }
-
-        let lastSyncAt = 0;
-        const monitor = (now) => {
           if (tween.cancelled) {
             videos.forEach(video => video.pause());
+            swapToForward();
             resolve();
             return;
           }
 
-          const masterTime = Math.min(videos[0].currentTime, target);
-          currentSceneTime = snapSceneTime(masterTime);
-
-          if (now - lastSyncAt >= SCENE_PLAY_SYNC_INTERVAL) {
-            videos.slice(1).forEach(video => {
-              if (Math.abs(video.currentTime - videos[0].currentTime) > SCENE_PLAY_SYNC_TOLERANCE) {
-                video.currentTime = videos[0].currentTime;
-              }
-            });
-            lastSyncAt = now;
-          }
-
-          if (videos[0].currentTime >= target - SCENE_SYNC_TOLERANCE || videos[0].ended) {
-            stopSceneAt(layer, target).then(resolve);
+          if (results.some(result => !result) || videos[0].paused) {
+            swapToForward();
+            scrubScene(layer, start, target, durationMs, tween).then(resolve);
             return;
           }
 
-          requestAnimationFrame(monitor);
-        };
+          if (wasReverse && 'requestVideoFrameCallback' in videos[0]) {
+            let swapped = false;
+            const doSwap = () => {
+              if (swapped) return;
+              swapped = true;
+              swapToForward();
+            };
+            videos[0].requestVideoFrameCallback(doSwap);
+            setTimeout(doSwap, 90);
+          } else {
+            swapToForward();
+          }
 
-        requestAnimationFrame(monitor);
+          let lastSyncAt = 0;
+          let settled = false;
+          let landingTimer = null;
+          const cancelForward = () => {
+            if (settled) return;
+            settled = true;
+            clearTimeout(landingTimer);
+            videos.forEach(video => video.pause());
+            resolve();
+          };
+          const finishForward = () => {
+            if (settled) return;
+            settled = true;
+            clearTimeout(landingTimer);
+            stopSceneAt(layer, target).then(resolve);
+          };
+          const scheduleMonitor = (callback) => {
+            if ('requestVideoFrameCallback' in videos[0]) {
+              videos[0].requestVideoFrameCallback((now) => callback(now));
+            } else {
+              requestAnimationFrame(callback);
+            }
+          };
+          landingTimer = setTimeout(finishForward, durationMs + 260);
+          const monitor = (now) => {
+            if (settled) return;
+            if (tween.cancelled) {
+              cancelForward();
+              return;
+            }
+
+            const masterTime = Math.min(videos[0].currentTime, target);
+            currentSceneTime = snapSceneTime(masterTime);
+
+            if (now - lastSyncAt >= SCENE_PLAY_SYNC_INTERVAL) {
+              videos.slice(1).forEach(video => {
+                if (Math.abs(video.currentTime - videos[0].currentTime) > SCENE_PLAY_SYNC_TOLERANCE) {
+                  video.currentTime = videos[0].currentTime;
+                }
+              });
+              lastSyncAt = now;
+            }
+
+            if (videos[0].currentTime >= target - SCENE_SYNC_TOLERANCE || videos[0].ended) {
+              finishForward();
+              return;
+            }
+
+            scheduleMonitor(monitor);
+          };
+
+          scheduleMonitor(monitor);
       });
     }));
   }
@@ -2010,7 +2101,8 @@
     activeBottleEl.classList.add('is-active', 'is-moving');
     hiddenBottleEl.classList.remove('is-active', 'is-moving', 'is-reverse');
 
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (options.cut || prefersReduced) {
       const tween = sceneTween;
       return cueScene(activeBottleEl, { sceneTime: target }).then(() => {
         if (sceneTween !== tween) return;
@@ -2235,8 +2327,8 @@
   // goToPage — mode-aware orchestrator
   // ------------------------------------------------------------------
   function goToPage(index, direction) {
-    if (index < 0) index = TOTAL_PAGES - 1;
-    if (index >= TOTAL_PAGES) index = 0;
+    if (index < 0) return;
+    if (index >= TOTAL_PAGES) return;
     if (isTransitioning) {
       pendingPageRequest = { index, direction };
       return;
@@ -2376,8 +2468,9 @@
     updateDots();
     updateBrowseCta();
 
-    // Scrub the paused video timeline to the new product anchor.
-    const videoDone = setBottleImage(page);
+    // Adjacent target (TB-500) gets the reverse animation; further targets cut directly.
+    const isAdjacentToCatalog = index === CATALOG_INDEX - 1;
+    const videoDone = setBottleImage(page, isAdjacentToCatalog ? { smoothReverse: true } : { cut: true });
 
     await Promise.all([delay(CATALOG_FADE), videoDone]);
     stageEl.classList.remove('is-video-priority');
@@ -2462,6 +2555,49 @@
     if (e.key === 'ArrowRight') goToPage(currentIndex + 1, 'fwd');
     if (e.key === 'ArrowLeft')  goToPage(currentIndex - 1, 'bwd');
   });
+
+  // Scroll-down on All Compounds → slide into full catalog page (landing/catalog.html)
+  let catalogScrollAccum = 0;
+  let catalogScrollFiring = false;
+  const CATALOG_SCROLL_THRESHOLD = 80;
+  let catalogScrollResetTimer = null;
+  function exitToFullCatalog() {
+    if (catalogScrollFiring) return;
+    catalogScrollFiring = true;
+    stageEl.classList.add('is-exiting-to-catalog');
+    setTimeout(() => {
+      window.location.href = 'landing/catalog.html?from=scroll';
+    }, 320);
+  }
+  document.addEventListener('wheel', (e) => {
+    if (catalogScrollFiring) return;
+    if (currentIndex !== CATALOG_INDEX) return;
+    if (isTransitioning) return;
+    if (e.target.closest('.catalog-listings')) return; // let the horizontal strip own its wheel
+    if (e.deltaY <= 0) {
+      catalogScrollAccum = Math.max(0, catalogScrollAccum + e.deltaY);
+      return;
+    }
+    catalogScrollAccum += e.deltaY;
+    clearTimeout(catalogScrollResetTimer);
+    catalogScrollResetTimer = setTimeout(() => { catalogScrollAccum = 0; }, 250);
+    if (catalogScrollAccum > CATALOG_SCROLL_THRESHOLD) exitToFullCatalog();
+  }, { passive: true });
+  let catalogTouchStartY = null;
+  document.addEventListener('touchstart', (e) => {
+    if (currentIndex !== CATALOG_INDEX) return;
+    catalogTouchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchmove', (e) => {
+    if (catalogTouchStartY === null) return;
+    if (currentIndex !== CATALOG_INDEX) return;
+    if (e.target.closest('.catalog-listings')) return;
+    const dy = catalogTouchStartY - e.touches[0].clientY;
+    if (dy > CATALOG_SCROLL_THRESHOLD) {
+      catalogTouchStartY = null;
+      exitToFullCatalog();
+    }
+  }, { passive: true });
 
   // Browse CTA — jumps to catalog from any detail page
   document.getElementById('browseLink').addEventListener('click', () => {
