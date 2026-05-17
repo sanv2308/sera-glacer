@@ -3,29 +3,42 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>sera club — peptide research</title>
 
-<link rel="preload" href="assets/vslblack.mp4?sync=5" as="video" type="video/mp4">
-<link rel="preload" href="assets/vslwhite.mp4?sync=5" as="video" type="video/mp4">
-<link rel="preload" href="assets/vslblack-reverse.mp4?sync=1" as="video" type="video/mp4">
-<link rel="preload" href="assets/vslwhite-reverse.mp4?sync=1" as="video" type="video/mp4">
+<link rel="preload" href="assets/glacier-video-1/video-1.mp4" as="video" type="video/mp4">
+<link rel="preload" href="assets/glacier-video-1/video-2.mp4" as="video" type="video/mp4">
+<link rel="preload" href="assets/glacier-video-1/video-3.mp4" as="video" type="video/mp4">
+<link rel="preload" href="assets/mobile/catalog-transition-01-02.m4v?hq=2" as="video" type="video/mp4">
+<link rel="preload" href="assets/mobile/catalog-transition-02-03.m4v?hq=2" as="video" type="video/mp4">
+<link rel="preload" href="assets/mobile/catalog-transition-03-04.m4v?hq=2" as="video" type="video/mp4">
+<link rel="preload" href="assets/mobile/catalog-transition-02-01.mp4?hq=2" as="video" type="video/mp4">
+<link rel="preload" href="assets/mobile/catalog-transition-03-02.mp4?hq=2" as="video" type="video/mp4">
+<link rel="preload" href="assets/mobile/catalog-transition-04-03.mp4?hq=2" as="video" type="video/mp4">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@200;300;400;500;600&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
   :root {
-    --bg: #06080b;
-    --bg-deep: #03050a;
-    --ink: #e9eef4;
-    --ink-soft: #b8c2cf;
-    --ink-mute: #6f7986;
-    --line: rgba(255,255,255,0.08);
-    --line-soft: rgba(255,255,255,0.05);
+    /* Glacier palette — editorial light on icy cinematic media */
+    --bg: #eef6fb;
+    --bg-deep: #f7fbff;
+    --ink: #1a2332;
+    --ink-soft: #44546b;
+    --ink-mute: #7f8c9d;
+    --line: rgba(26,35,50,0.14);
+    --line-soft: rgba(26,35,50,0.06);
+
+    /* Glass surface tokens */
+    --glass-bg: rgba(255,255,255,0.34);
+    --glass-bg-strong: rgba(255,255,255,0.62);
+    --glass-border: rgba(255,255,255,0.64);
+    --glass-shadow: 0 18px 56px rgba(31,67,103,0.13);
+    --glass-blur: blur(20px) saturate(150%);
 
     /* These four are the "themed" tokens — get swapped per page */
-    --accent: #9eb5d1;
-    --accent-deep: #6d88a8;
-    --accent-glow: rgba(158,181,209,0.18);
-    --accent-ink: #0b1220;
+    --accent: #4d7aa7;
+    --accent-deep: #2f5680;
+    --accent-glow: rgba(77,122,167,0.22);
+    --accent-ink: #f6f9fc;
 
     --display: 'Onest', ui-sans-serif, system-ui, sans-serif;
     --body: 'Manrope', ui-sans-serif, system-ui, sans-serif;
@@ -54,10 +67,50 @@
     height: 100svh;
     min-height: 100vh;
     min-height: 100svh;
-    background: #000;
+    background: var(--bg);
+    color: var(--ink);
     overflow: hidden;
     isolation: isolate;
   }
+
+  /* Glacier video stage — one looping video per scene with opacity crossfade */
+  .glacier-stage {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 79% 28%, rgba(137,198,239,0.56), transparent 34%),
+      linear-gradient(115deg, #fbfdff 0%, #eaf5fc 32%, #8ec8ef 72%, #5aa8de 100%);
+  }
+  .glacier-stage::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, rgba(255,255,255,0.08), rgba(255,255,255,0.0) 42%, rgba(102,180,232,0.06) 100%),
+      radial-gradient(circle at 72% 18%, rgba(255,255,255,0.18), transparent 34%);
+    mix-blend-mode: screen;
+    opacity: 0;
+  }
+  .glacier-video {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    opacity: 0;
+    filter: brightness(1.04) saturate(1.18);
+    transform: translateX(7%) scale(1.035);
+    transform-origin: center;
+    transition: opacity .9s cubic-bezier(.32,.72,.24,1);
+    will-change: opacity;
+  }
+  .glacier-video.is-active { opacity: 1; }
 
   /* Paused cinema shot layer; the active layer scrubs between page anchors */
   .bottle {
@@ -155,19 +208,7 @@
   }
 
   .cursor-blob {
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 2;
-    width: 218px;
-    height: 218px;
-    opacity: var(--blob-alpha);
-    transform: translate3d(calc(var(--blob-x) - 50%), calc(var(--blob-y) - 50%), 0) scale(var(--blob-scale));
-    transform-origin: center;
-    pointer-events: none;
-    filter: none;
-    mix-blend-mode: screen;
-    will-change: transform, opacity;
+    display: none;
   }
 
   .cursor-blob span,
@@ -266,17 +307,24 @@
     top: calc(50% + var(--lobe-three-y) - 24px);
   }
 
-  /* Soft black gradient over the left side so the UI sits on solid black */
+  /* White gradient wash so the product copy sits directly on the ice. */
   .stage::after {
     content: "";
     position: absolute;
-    inset: 0;
+    inset: 0 auto 0 0;
+    width: min(40vw, 620px);
     background:
+      radial-gradient(ellipse 64% 82% at 8% 43%,
+        rgba(255,255,255,0.70) 0%,
+        rgba(255,255,255,0.40) 35%,
+        rgba(255,255,255,0.08) 60%,
+        rgba(255,255,255,0.0) 86%),
       linear-gradient(90deg,
-        rgba(0,0,0,0.95) 0%,
-        rgba(0,0,0,0.92) 22%,
-        rgba(0,0,0,0.55) 35%,
-        rgba(0,0,0,0.0) 48%);
+        rgba(255,255,255,0.78) 0%,
+        rgba(255,255,255,0.58) 25%,
+        rgba(255,255,255,0.28) 48%,
+        rgba(255,255,255,0.05) 68%,
+        rgba(255,255,255,0.0) 100%);
     z-index: 1;
     pointer-events: none;
     transition: opacity .45s cubic-bezier(.32,.72,.24,1);
@@ -287,7 +335,7 @@
 
   /* Subtle film grain */
   .grain {
-    position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0.06; mix-blend-mode: overlay;
+    position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0.035; mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   }
 
@@ -298,7 +346,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 28px 56px 28px 8px;
+    padding: 40px 56px 18px 48px;
     color: var(--ink-soft);
     font-family: var(--body);
     font-size: 12px;
@@ -318,6 +366,7 @@
     display: block;
     width: clamp(230px, 18vw, 310px);
     height: auto;
+    filter: brightness(0) saturate(100%);
   }
   .navlinks { display: inline-flex; gap: 36px; }
   .navlinks a {
@@ -339,15 +388,24 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     align-items: start;
-    padding: 24px 56px 0;
+    padding: 8px 56px 0 108px;
     min-height: calc(100vh - 84px);
     min-height: calc(100svh - 84px);
   }
   .panel {
-    max-width: 520px;
-    padding-top: 12px;
-    padding-bottom: 32px;
+    max-width: 470px;
+    padding: 0 0 34px;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
+    color: var(--ink);
   }
+  .panel a { color: var(--ink); }
+  .panel p { color: var(--ink-soft); }
+  .panel .lede { color: var(--ink); }
 
   /* Per-element staggered transitions for page changes.
      Each element marked [data-stagger] cascades by its --i index. */
@@ -441,7 +499,7 @@
   h1.display {
     font-family: var(--display);
     font-weight: 200;
-    font-size: clamp(48px, 7.2vw, 96px);
+    font-size: clamp(68px, 7.1vw, 122px);
     letter-spacing: -0.025em;
     line-height: 0.95;
     margin: 0 0 10px;
@@ -461,51 +519,65 @@
     font-family: var(--body);
     color: var(--ink);
     font-weight: 300;
-    font-size: 16px;
-    line-height: 1.5;
+    font-size: 18px;
+    line-height: 1.48;
     max-width: 460px;
-    margin: 0 0 18px;
+    margin: 0 0 24px;
+    display: grid;
+    grid-template-columns: 10px 1fr;
+    gap: 18px;
+    align-items: start;
+  }
+  .lede::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    margin-top: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 18px var(--accent-glow);
   }
 
   .divider {
-    width: 100%; max-width: 460px; height: 1px;
+    width: 100%; max-width: 420px; height: 1px;
     background: var(--line);
     margin: 2px 0 14px;
   }
 
   /* Feature rows */
-  .features { display: flex; flex-direction: column; gap: 12px; max-width: 480px; margin-bottom: 22px; }
+  .features { display: flex; flex-direction: column; gap: 12px; max-width: 460px; margin-bottom: 20px; }
   .feat {
     display: grid;
     grid-template-columns: 44px 1fr;
     gap: 18px;
     align-items: flex-start;
-    padding: 4px 0 4px 8px;
-    margin-left: -8px;
+    padding: 0;
+    margin-left: 0;
     border-left: 1px solid transparent;
     transition: border-color .35s ease, transform .35s ease, padding-left .35s ease;
   }
   .feat:hover {
     border-left-color: var(--accent);
-    padding-left: 14px;
+    padding-left: 0;
   }
   .feat .ico {
-    width: 38px; height: 38px;
-    border: 1px solid color-mix(in oklab, var(--accent) 50%, transparent);
+    width: 42px; height: 42px;
+    border: 1px solid rgba(26,35,50,0.42);
+    background: rgba(255,255,255,0.36);
     display: flex; align-items: center; justify-content: center;
     color: var(--accent);
     transition: background .35s ease, border-color .35s ease, color .35s ease;
   }
   .feat:hover .ico {
-    background: var(--accent-glow);
+    background: rgba(255,255,255,0.64);
     border-color: var(--accent);
-    color: color-mix(in oklab, var(--accent) 80%, white);
+    color: var(--accent-deep);
   }
   .feat .ico svg { width: 20px; height: 20px; }
   .feat .copy {
     font-family: var(--body);
     color: var(--ink-soft);
-    font-size: 14.5px;
+    font-size: 14px;
     line-height: 1.55;
     font-weight: 300;
     padding-top: 7px;
@@ -547,13 +619,13 @@
     flex: 1;
     height: 56px;
     padding: 0 26px;
-    background: var(--accent);
-    color: var(--accent-ink);
+    background: #101114;
+    color: #fff;
     font-family: var(--body);
     font-size: 12.5px;
     letter-spacing: 0.32em;
     text-transform: uppercase;
-    border: 1px solid var(--accent);
+    border: 1px solid #101114;
     cursor: pointer;
     display: inline-flex; align-items: center; justify-content: center; gap: 12px;
     overflow: hidden;
@@ -564,9 +636,9 @@
                 letter-spacing .35s ease,
                 transform .25s ease;
   }
-  .btn-primary:hover { background: color-mix(in oklab, var(--accent) 85%, white); letter-spacing: 0.36em; }
+  .btn-primary:hover { background: #000; letter-spacing: 0.36em; }
   .btn-primary:active { transform: translateY(1px); }
-  .btn-primary.is-added { background: transparent; color: var(--accent); border-color: var(--accent); }
+  .btn-primary.is-added { background: transparent; color: #101114; border-color: rgba(16,17,20,0.44); }
   .btn-primary .label, .btn-primary .added {
     display: inline-flex; align-items: center; gap: 10px;
     transition: opacity .25s ease, transform .25s ease;
@@ -579,14 +651,14 @@
   .btn-bag {
     position: relative;
     width: 56px; height: 56px;
-    border: 1px solid var(--line);
-    background: transparent;
-    color: var(--ink-soft);
+    border: 1px solid rgba(16,17,20,0.34);
+    background: rgba(255,255,255,0.34);
+    color: #101114;
     cursor: pointer;
     display: inline-flex; align-items: center; justify-content: center;
     transition: border-color .25s ease, color .25s ease, background .25s ease;
   }
-  .btn-bag:hover { border-color: var(--accent); color: var(--ink); background: var(--accent-glow); }
+  .btn-bag:hover { border-color: #101114; color: #101114; background: rgba(255,255,255,0.62); }
   .btn-bag svg { width: 20px; height: 20px; }
   .badge {
     position: absolute;
@@ -681,24 +753,23 @@
      ------------------------------------------------------------------ */
   .browse-cta {
     position: absolute;
-    bottom: max(72px, calc(env(safe-area-inset-bottom) + 72px));
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: max(36px, calc(env(safe-area-inset-bottom) + 36px));
+    right: 56px;
     z-index: 6;
     transition: opacity .5s cubic-bezier(.32,.72,.24,1),
                 transform .5s cubic-bezier(.32,.72,.24,1);
   }
   .browse-cta.is-hidden {
     opacity: 0;
-    transform: translateX(-50%) translateY(10px);
+    transform: translateY(10px);
     pointer-events: none;
   }
   .browse-link {
-    background: rgba(0,0,0,0.4);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid var(--line);
-    color: var(--ink-soft);
+    background: var(--glass-bg-strong);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    color: var(--ink);
     padding: 14px 26px 14px 28px;
     font-family: var(--body);
     font-size: 11px;
@@ -708,25 +779,27 @@
     display: inline-flex;
     align-items: center;
     gap: 14px;
+    box-shadow: var(--glass-shadow);
     transition: border-color .45s ease, color .45s ease, background .45s ease, gap .35s ease;
   }
   .browse-link svg { width: 14px; height: 14px; }
   .browse-link:hover {
     border-color: var(--accent);
-    color: var(--ink);
-    background: rgba(0,0,0,0.55);
+    color: var(--accent-deep);
+    background: rgba(255,255,255,0.55);
     gap: 18px;
   }
 
   .blob-mode-switcher {
     position: absolute;
-    left: 50%;
-    bottom: 12px;
+    left: auto;
+    right: 24px;
+    bottom: 20px;
     z-index: 8;
     display: inline-flex;
     gap: 5px;
     padding: 5px;
-    transform: translateX(-50%);
+    transform: none;
     border: 1px solid rgba(255,255,255,0.06);
     background: rgba(0,0,0,0.22);
     opacity: 0.32;
@@ -755,6 +828,14 @@
   }
   .blob-mode-switcher button:focus-visible {
     box-shadow: 0 0 0 2px rgba(255,255,255,0.16), 0 0 12px var(--accent-glow);
+  }
+
+  .mobile-glacier-video,
+  .mobile-glacier-frame,
+  .mobile-menu,
+  .mobile-bottom-nav,
+  .mobile-index-grid {
+    display: none;
   }
 
   /* ------------------------------------------------------------------
@@ -793,6 +874,8 @@
     pointer-events: none;
   }
 
+  /* Hide the rocks-landscape composite + isolated-bottle overlays in catalog
+     mode — the glacier video at scene 3 supplies the backdrop. */
   .stage.mode-catalog .catalog-bg,
   .stage.mode-catalog .catalog-bottle {
     display: none;
@@ -1034,21 +1117,23 @@
   }
   .catalog-listing {
     min-height: 168px;
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 8px;
-    background: rgba(5,7,10,0.54);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    background: var(--glass-bg);
     color: var(--ink);
     text-decoration: none;
     overflow: hidden;
-    backdrop-filter: blur(18px);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    box-shadow: var(--glass-shadow);
     transition: transform .35s cubic-bezier(.32,.72,.24,1),
                 border-color .35s ease,
                 background .35s ease;
   }
   .catalog-listing:hover {
     transform: translateY(-5px);
-    border-color: color-mix(in oklab, var(--accent) 48%, rgba(255,255,255,0.18));
-    background: rgba(10,14,20,0.7);
+    border-color: color-mix(in oklab, var(--accent) 48%, var(--glass-border));
+    background: var(--glass-bg-strong);
   }
   .catalog-listing-image {
     position: relative;
@@ -1133,10 +1218,57 @@
     .initial-rise > * { opacity: 1 !important; transform: none !important; }
   }
 
+  @media (min-width: 901px) and (max-height: 860px) {
+    .topbar { padding-top: 26px; padding-bottom: 12px; }
+    .brand-logo { width: clamp(190px, 14vw, 250px); }
+    .hero {
+      padding-top: 0;
+      min-height: calc(100svh - 74px);
+    }
+    .section-id { margin-bottom: 12px; }
+    h1.display { font-size: clamp(56px, 6vw, 88px); margin-bottom: 8px; }
+    .subhead { margin-bottom: 12px; }
+    .lede {
+      font-size: 16px;
+      line-height: 1.42;
+      margin-bottom: 14px;
+    }
+    .divider { margin-bottom: 12px; }
+    .features { gap: 9px; margin-bottom: 14px; }
+    .feat {
+      grid-template-columns: 38px 1fr;
+      gap: 14px;
+    }
+    .feat .ico {
+      width: 36px;
+      height: 36px;
+    }
+    .feat .ico svg {
+      width: 17px;
+      height: 17px;
+    }
+    .feat .copy {
+      font-size: 13px;
+      line-height: 1.42;
+      padding-top: 3px;
+    }
+    .qty-row { margin-bottom: 8px; }
+    .btn-primary,
+    .btn-bag {
+      height: 50px;
+    }
+    .meta { margin-top: 14px; }
+    .browse-cta { bottom: max(20px, calc(env(safe-area-inset-bottom) + 20px)); }
+  }
+
   @media (max-width: 1100px) {
     .bottle { object-position: right center; opacity: 0; }
     .bottle.is-active { opacity: .35; }
-    .stage::after { background: linear-gradient(180deg, rgba(0,0,0,0.85), rgba(0,0,0,0.95)); }
+    .stage::after {
+      width: 100%;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.82) 52%, rgba(255,255,255,0.28) 100%);
+    }
     .hero { grid-template-columns: 1fr; }
     .panel { max-width: 640px; padding-top: 8px; }
   }
@@ -1144,6 +1276,7 @@
     .topbar { padding: 22px 24px; }
     .navlinks { display: none; }
     .hero { padding: 0 24px; }
+    .browse-cta { right: 24px; bottom: 28px; }
     .foot { padding: 18px 24px 22px; }
     .lot-vertical { display: none; }
     h1.display { font-size: 64px; }
@@ -1155,41 +1288,1030 @@
       grid-auto-columns: 42%;
     }
   }
+
+  @media (max-width: 760px) {
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #f8fbff;
+    }
+
+    .stage {
+      height: 100vh;
+      height: 100svh;
+      min-height: 720px;
+      background: #f8fbff;
+      overflow: hidden;
+    }
+
+    .glacier-stage {
+      background: #f7fbff;
+    }
+
+    .glacier-video {
+      display: none;
+    }
+
+    .mobile-glacier-video,
+    .mobile-glacier-frame {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      opacity: 1;
+      filter: brightness(1.035) saturate(0.96) contrast(1.015);
+      transform: none;
+      transform-origin: center top;
+      pointer-events: none;
+    }
+
+    .mobile-glacier-frame {
+      z-index: 3;
+    }
+
+    .mobile-glacier-video {
+      z-index: 4;
+      background: transparent;
+      opacity: 0;
+      transition: opacity 220ms ease;
+    }
+
+    .mobile-glacier-video.is-playing {
+      opacity: 1;
+    }
+
+    .mobile-glacier-video.is-reverse-playing {
+      opacity: 1;
+      filter: brightness(1.035) saturate(0.96) contrast(1.015);
+    }
+
+    .mobile-glacier-video::-webkit-media-controls {
+      display: none !important;
+    }
+
+    .stage::after {
+      display: none;
+      opacity: 0 !important;
+      background: none;
+    }
+
+    .stage.mode-catalog::after {
+      display: none;
+      opacity: 0 !important;
+      background: none;
+    }
+
+    .grain {
+      opacity: 0.018;
+    }
+
+    .topbar {
+      position: absolute;
+      inset: 0 0 auto 0;
+      z-index: 8;
+      align-items: flex-start;
+      padding: max(24px, calc(env(safe-area-inset-top) + 18px)) 22px 0 18px;
+    }
+
+    .brand-logo {
+      width: min(43vw, 166px);
+      transform: translate(-18px, -4px);
+    }
+
+    .navlinks {
+      display: none;
+    }
+
+    .mobile-menu {
+      display: grid;
+      width: 38px;
+      height: 31px;
+      gap: 6px;
+      margin-top: 2px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .mobile-menu span {
+      display: block;
+      height: 1px;
+      background: currentColor;
+      opacity: 0.82;
+    }
+
+    .hero {
+      display: block;
+      min-height: 100%;
+      padding: clamp(152px, 19svh, 178px) 0 0 29px;
+    }
+
+    .panel {
+      width: min(55vw, 265px);
+      max-width: 265px;
+      padding: 0;
+    }
+
+    .section-id {
+      gap: 14px;
+      margin: 0 0 34px;
+      color: var(--ink);
+      font-size: 11px;
+      letter-spacing: 0.28em;
+    }
+
+    .section-id .rule {
+      width: 48px;
+      opacity: 0.78;
+    }
+
+    .section-id .step {
+      color: var(--ink);
+      font-size: 12px;
+      letter-spacing: 0;
+      padding: 2px 5px;
+    }
+
+    .section-id .of {
+      color: var(--ink);
+    }
+
+    h1.display {
+      font-size: clamp(54px, 16vw, 70px);
+      line-height: 0.96;
+      margin: 0 0 18px;
+      letter-spacing: -0.035em;
+      white-space: nowrap;
+    }
+
+    h1.display::before {
+      content: "Peptide Research";
+      display: block;
+      margin: 0 0 18px;
+      font-family: var(--body);
+      font-size: clamp(12px, 3.6vw, 17px);
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: 0.34em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .subhead {
+      margin: 0 0 20px;
+      font-size: clamp(12px, 3.4vw, 16px);
+      line-height: 1.35;
+      letter-spacing: 0.34em;
+      color: var(--accent);
+    }
+
+    .lede {
+      display: block;
+      max-width: 248px;
+      margin: 0;
+      color: #171d27;
+      font-size: clamp(16px, 4.15vw, 20px);
+      font-weight: 300;
+      line-height: 1.58;
+      letter-spacing: -0.01em;
+    }
+
+    .lede::before,
+    .divider {
+      display: none;
+    }
+
+    .features {
+      width: min(58vw, 300px);
+      max-width: 300px;
+      gap: clamp(21px, 3.1svh, 32px);
+      margin: clamp(44px, 5.6svh, 58px) 0 clamp(34px, 4.6svh, 52px);
+    }
+
+    .feat {
+      grid-template-columns: 42px minmax(0, 1fr);
+      gap: 21px;
+      align-items: flex-start;
+    }
+
+    .feat:hover {
+      border-left-color: transparent;
+    }
+
+    .feat .ico {
+      width: 42px;
+      height: 42px;
+      border-color: color-mix(in oklab, var(--accent) 68%, rgba(26,35,50,0.24));
+      border-radius: 6px;
+      background: rgba(255,255,255,0.35);
+      color: var(--accent);
+    }
+
+    .feat .ico svg {
+      width: 21px;
+      height: 21px;
+    }
+
+    .feat .copy {
+      padding-top: 0;
+      color: #222a35;
+      font-size: clamp(14px, 3.75vw, 18px);
+      font-weight: 300;
+      line-height: 1.46;
+      letter-spacing: -0.01em;
+    }
+
+    .qty-row {
+      display: grid;
+      grid-template-columns: 186px 76px;
+      gap: 10px 18px;
+      align-items: end;
+      max-width: 300px;
+      margin: 0 0 18px;
+    }
+
+    .qty-label {
+      font-size: 10px;
+      letter-spacing: 0.34em;
+      color: var(--accent);
+    }
+
+    .qty-row > .qty-label:first-child {
+      grid-column: 1 / -1;
+    }
+
+    .qty-row > .qty-label:last-child {
+      color: var(--ink);
+      line-height: 1.32;
+    }
+
+    .qty {
+      height: 45px;
+      border-color: rgba(26,35,50,0.26);
+      background: rgba(255,255,255,0.12);
+    }
+
+    .qty button {
+      width: 55px;
+      height: 45px;
+      color: var(--accent);
+      font-size: 18px;
+    }
+
+    .qty .val {
+      width: 76px;
+      color: #0f1722;
+      font-size: 20px;
+    }
+
+    .actions {
+      width: min(78vw, 342px);
+      max-width: 342px;
+      gap: 12px;
+    }
+
+    .btn-primary {
+      height: 54px;
+      background:
+        linear-gradient(90deg,
+          color-mix(in oklab, var(--accent) 88%, #ffffff 12%),
+          color-mix(in oklab, var(--accent) 70%, #ffffff 30%));
+      border-color: transparent;
+      color: #121a26;
+      font-size: 11.5px;
+      letter-spacing: 0.31em;
+      box-shadow: 0 18px 34px rgba(55, 91, 126, 0.13);
+    }
+
+    .btn-primary:hover {
+      background:
+        linear-gradient(90deg,
+          color-mix(in oklab, var(--accent) 90%, #ffffff 10%),
+          color-mix(in oklab, var(--accent) 74%, #ffffff 26%));
+      letter-spacing: 0.31em;
+    }
+
+    .btn-bag {
+      width: 54px;
+      height: 54px;
+      background: rgba(255,255,255,0.2);
+      border-color: rgba(16,17,20,0.32);
+    }
+
+    .meta,
+    .browse-cta,
+    .foot,
+    .lot-vertical,
+    .blob-mode-switcher {
+      display: none;
+    }
+
+    .mobile-bottom-nav {
+      position: absolute;
+      left: 29px;
+      bottom: max(20px, calc(env(safe-area-inset-bottom) + 18px));
+      z-index: 8;
+      display: inline-flex;
+      align-items: center;
+      gap: 24px;
+      color: var(--ink);
+      font-family: var(--body);
+      font-size: 16px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+    }
+
+    .mobile-bottom-nav button {
+      width: 28px;
+      height: 32px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .mobile-bottom-nav .of {
+      color: var(--ink);
+    }
+
+    .catalog {
+      z-index: 5;
+    }
+
+    .catalog[aria-hidden="true"] {
+      display: none;
+    }
+
+    .stage.mode-catalog .catalog[aria-hidden="false"] {
+      display: block;
+    }
+
+    .stage.mode-catalog .hero,
+    .stage.mode-catalog .panel {
+      display: none;
+    }
+
+    .stage.mode-catalog .catalog-bg,
+    .stage.mode-catalog .catalog-bottle,
+    .stage.mode-catalog .catalog-listings {
+      display: none;
+    }
+
+    .catalog-header {
+      top: clamp(94px, 12.2svh, 124px);
+      left: 31px;
+      right: 28px;
+      z-index: 9;
+      max-width: 268px;
+      padding: 0;
+      text-align: left;
+    }
+
+    .catalog-eyebrow {
+      margin: 0 0 21px;
+      color: var(--accent-deep);
+      font-size: 11px;
+      letter-spacing: 0.28em;
+    }
+
+    .stage.mode-catalog .catalog-eyebrow {
+      display: none;
+    }
+
+    .catalog-title {
+      font-size: clamp(42px, 11.6vw, 56px);
+      line-height: 0.98;
+      margin-bottom: 14px;
+      color: #1a2332;
+    }
+
+    .catalog-sub {
+      max-width: 245px;
+      margin: 0;
+      color: #222b38;
+      font-size: 13.5px;
+      line-height: 1.34;
+      letter-spacing: 0;
+    }
+
+    .catalog-sub a {
+      display: inline-flex;
+      margin-top: 11px;
+      color: var(--accent-deep) !important;
+      border-bottom-color: color-mix(in oklab, var(--accent-deep) 32%, transparent) !important;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+    }
+
+    .catalog-sub + .catalog-sub {
+      margin-top: 5px !important;
+      font-size: 9.5px !important;
+      line-height: 1.1 !important;
+      letter-spacing: 0.2em !important;
+    }
+
+    .catalog-card {
+      z-index: 7;
+      pointer-events: auto;
+    }
+
+    .catalog-card .card-label {
+      display: none;
+    }
+
+    .catalog-card[data-target="0"] {
+      left: 7%;
+      top: 49%;
+      width: 24%;
+      height: 18%;
+    }
+
+    .catalog-card[data-target="1"] {
+      left: 48%;
+      top: 43%;
+      width: 24%;
+      height: 18%;
+    }
+
+    .catalog-card[data-target="2"] {
+      left: 74%;
+      top: 44%;
+      width: 22%;
+      height: 18%;
+    }
+
+    .catalog-card[data-target="0"] .card-label,
+    .catalog-card[data-target="0"]:hover .card-label {
+      transform: translate(2px, 0);
+    }
+
+    .catalog-card[data-target="1"] .card-label,
+    .catalog-card[data-target="1"]:hover .card-label {
+      align-items: center;
+      text-align: center;
+      transform: translate(-16px, -2px);
+    }
+
+    .catalog-card[data-target="2"] .card-label,
+    .catalog-card[data-target="2"]:hover .card-label {
+      transform: translate(-2px, 0);
+    }
+
+    .card-label {
+      gap: 4px;
+      padding: 0;
+      opacity: 1;
+    }
+
+    .card-num {
+      font-size: 7px;
+      letter-spacing: 0.32em;
+      color: var(--ink-soft);
+    }
+
+    .card-name {
+      font-size: 13px;
+      font-weight: 400;
+    }
+
+    .card-tag {
+      font-size: 6px;
+      letter-spacing: 0.34em;
+      color: var(--ink-soft);
+    }
+
+    .mobile-index-grid {
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      bottom: max(58px, calc(env(safe-area-inset-bottom) + 56px));
+      z-index: 8;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 6px;
+      pointer-events: auto;
+    }
+
+    .mobile-index-card,
+    .mobile-system-card {
+      min-width: 0;
+      border: 1px solid rgba(255,255,255,0.82);
+      border-radius: 5px;
+      background: rgba(255,255,255,0.66);
+      backdrop-filter: blur(18px) saturate(140%);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+      box-shadow: 0 12px 26px rgba(39, 72, 102, 0.12);
+    }
+
+    .mobile-index-card {
+      min-height: 94px;
+      padding: 9px 4px 8px;
+      color: var(--ink);
+      text-decoration: none;
+      display: grid;
+      grid-template-rows: 40px auto 13px;
+      justify-items: center;
+      align-items: end;
+      gap: 5px;
+    }
+
+    .mobile-index-card img {
+      width: 32px;
+      height: 40px;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 10px rgba(36,60,83,0.18));
+    }
+
+    .mobile-index-card span {
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: center;
+      font-family: var(--display);
+      font-size: 9.5px;
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+    }
+
+    .mobile-index-card i {
+      color: var(--accent-deep);
+      font-style: normal;
+      font-size: 15px;
+      line-height: 1;
+    }
+
+    .mobile-system-card {
+      grid-column: 3 / 6;
+      min-height: 94px;
+      padding: 12px 14px;
+      display: grid;
+      grid-template-columns: 29px minmax(0, 1fr);
+      column-gap: 14px;
+      align-items: center;
+      color: var(--ink);
+    }
+
+    .mobile-system-card .sc {
+      width: 28px;
+      height: 28px;
+      display: inline-grid;
+      place-items: center;
+      border: 1px solid currentColor;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+    }
+
+    .mobile-system-card b {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+    }
+
+    .mobile-system-card p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 11.5px;
+      line-height: 1.28;
+    }
+  }
+
+  @media (max-width: 760px) and (max-height: 760px) {
+    .stage {
+      min-height: 680px;
+    }
+
+    .hero {
+      padding-top: 112px;
+    }
+
+    .section-id {
+      margin-bottom: 16px;
+    }
+
+    h1.display {
+      font-size: clamp(44px, 12.6vw, 58px);
+      margin-bottom: 9px;
+    }
+
+    h1.display::before {
+      margin-bottom: 11px;
+      font-size: 12px;
+    }
+
+    .subhead {
+      margin-bottom: 9px;
+    }
+
+    .lede {
+      font-size: 14px;
+      line-height: 1.38;
+    }
+
+    .features {
+      width: min(51vw, 250px);
+      gap: 9px;
+      margin-top: 16px;
+      margin-bottom: 14px;
+    }
+
+    .feat {
+      grid-template-columns: 38px minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    .feat .ico {
+      width: 38px;
+      height: 38px;
+    }
+
+    .feat .copy {
+      font-size: 12px;
+      line-height: 1.3;
+    }
+
+    .qty-row {
+      grid-template-columns: 150px 68px;
+      gap: 7px 14px;
+      margin-bottom: 9px;
+    }
+
+    .qty {
+      height: 38px;
+    }
+
+    .qty button {
+      width: 44px;
+      height: 38px;
+    }
+
+    .qty .val {
+      width: 62px;
+      font-size: 17px;
+    }
+
+    .actions {
+      width: min(70vw, 294px);
+      gap: 9px;
+    }
+
+    .btn-primary,
+    .btn-bag {
+      height: 46px;
+    }
+
+    .btn-bag {
+      width: 46px;
+    }
+
+    .mobile-bottom-nav {
+      bottom: max(8px, calc(env(safe-area-inset-bottom) + 8px));
+    }
+
+    .catalog-header {
+      top: 78px;
+      max-width: 252px;
+    }
+
+    .catalog-eyebrow {
+      margin-bottom: 16px;
+    }
+
+    .catalog-title {
+      font-size: clamp(39px, 10.8vw, 48px);
+      margin-bottom: 11px;
+    }
+
+    .catalog-sub {
+      max-width: 236px;
+      font-size: 12.5px;
+      line-height: 1.28;
+    }
+
+    .catalog-sub + .catalog-sub {
+      margin-top: 6px !important;
+      font-size: 8px !important;
+      letter-spacing: 0.16em !important;
+    }
+
+    .catalog-card[data-target="0"] {
+      top: 50%;
+    }
+
+    .catalog-card[data-target="1"] {
+      top: 44%;
+    }
+
+    .catalog-card[data-target="2"] {
+      top: 45%;
+    }
+
+    .mobile-index-grid {
+      bottom: 42px;
+      gap: 5px;
+    }
+
+    .mobile-index-card {
+      min-height: 76px;
+      grid-template-rows: 30px auto 12px;
+      padding: 7px 4px 6px;
+    }
+
+    .mobile-index-card img {
+      width: 26px;
+      height: 32px;
+    }
+
+    .mobile-index-card span {
+      font-size: 8.5px;
+    }
+
+    .mobile-index-card i {
+      font-size: 13px;
+    }
+
+    .mobile-system-card {
+      min-height: 86px;
+      padding: 11px 13px;
+    }
+
+    .mobile-system-card p {
+      font-size: 10px;
+      line-height: 1.2;
+    }
+  }
+
+  @media (max-width: 430px) and (max-height: 720px) {
+    .stage {
+      min-height: 100svh;
+    }
+
+    .topbar {
+      padding: max(17px, calc(env(safe-area-inset-top) + 13px)) 18px 0 15px;
+    }
+
+    .brand-logo {
+      width: min(40vw, 142px);
+      transform: translate(-13px, -3px);
+    }
+
+    .mobile-menu {
+      width: 34px;
+      height: 27px;
+      gap: 5px;
+    }
+
+    .hero {
+      padding-top: max(86px, calc(env(safe-area-inset-top) + 78px));
+      padding-left: 22px;
+    }
+
+    .panel {
+      width: min(57vw, 232px);
+      max-width: 232px;
+    }
+
+    .section-id {
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 9.5px;
+      letter-spacing: 0.22em;
+    }
+
+    .section-id .rule {
+      width: 38px;
+    }
+
+    h1.display {
+      font-size: clamp(39px, 12vw, 50px);
+      line-height: 0.94;
+      margin-bottom: 7px;
+    }
+
+    h1.display::before {
+      margin-bottom: 9px;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+    }
+
+    .subhead {
+      margin-bottom: 7px;
+      font-size: 10.5px;
+      line-height: 1.22;
+      letter-spacing: 0.28em;
+    }
+
+    .lede {
+      max-width: 216px;
+      font-size: 12.5px;
+      line-height: 1.32;
+    }
+
+    .features {
+      width: min(54vw, 224px);
+      gap: 7px;
+      margin-top: 12px;
+      margin-bottom: 10px;
+    }
+
+    .feat {
+      grid-template-columns: 32px minmax(0, 1fr);
+      gap: 10px;
+    }
+
+    .feat .ico {
+      width: 32px;
+      height: 32px;
+      border-radius: 5px;
+    }
+
+    .feat .ico svg {
+      width: 17px;
+      height: 17px;
+    }
+
+    .feat .copy {
+      font-size: 10.5px;
+      line-height: 1.23;
+    }
+
+    .qty-row {
+      grid-template-columns: 124px 58px;
+      gap: 5px 10px;
+      max-width: 210px;
+      margin-bottom: 7px;
+    }
+
+    .qty-label {
+      font-size: 8.5px;
+      letter-spacing: 0.26em;
+    }
+
+    .qty {
+      height: 34px;
+    }
+
+    .qty button {
+      width: 38px;
+      height: 34px;
+      font-size: 15px;
+    }
+
+    .qty .val {
+      width: 48px;
+      font-size: 16px;
+    }
+
+    .actions {
+      width: min(71vw, 266px);
+      gap: 8px;
+    }
+
+    .btn-primary,
+    .btn-bag {
+      height: 42px;
+    }
+
+    .btn-primary {
+      font-size: 9.5px;
+      letter-spacing: 0.27em;
+    }
+
+    .btn-bag {
+      width: 42px;
+    }
+
+    .mobile-bottom-nav {
+      left: 22px;
+      bottom: max(6px, calc(env(safe-area-inset-bottom) + 6px));
+      gap: 19px;
+      font-size: 14px;
+      letter-spacing: 0.26em;
+    }
+
+    .mobile-bottom-nav button {
+      width: 24px;
+      height: 28px;
+      font-size: 20px;
+    }
+
+    .catalog-header {
+      top: max(70px, calc(env(safe-area-inset-top) + 62px));
+      left: 24px;
+      right: 22px;
+      max-width: 228px;
+    }
+
+    .catalog-title {
+      font-size: clamp(35px, 10vw, 43px);
+      margin-bottom: 8px;
+    }
+
+    .catalog-sub {
+      max-width: 212px;
+      font-size: 11.5px;
+      line-height: 1.23;
+    }
+
+    .catalog-sub a {
+      margin-top: 8px;
+      font-size: 9px;
+      letter-spacing: 0.26em;
+    }
+
+    .mobile-index-grid {
+      left: 15px;
+      right: 15px;
+      bottom: max(35px, calc(env(safe-area-inset-bottom) + 35px));
+      gap: 4px;
+    }
+
+    .mobile-index-card {
+      min-height: 68px;
+      grid-template-rows: 26px auto 10px;
+      padding: 6px 3px 5px;
+    }
+
+    .mobile-index-card img {
+      width: 22px;
+      height: 27px;
+    }
+
+    .mobile-index-card span {
+      font-size: 7.5px;
+    }
+
+    .mobile-index-card i {
+      font-size: 12px;
+    }
+
+    .mobile-system-card {
+      min-height: 76px;
+      padding: 9px 10px;
+      grid-template-columns: 25px minmax(0, 1fr);
+      column-gap: 10px;
+    }
+
+    .mobile-system-card .sc {
+      width: 24px;
+      height: 24px;
+      font-size: 10px;
+    }
+
+    .mobile-system-card b {
+      margin-bottom: 5px;
+      font-size: 7.5px;
+      letter-spacing: 0.24em;
+    }
+
+    .mobile-system-card p {
+      font-size: 9px;
+      line-height: 1.15;
+    }
+
+    .panel.is-out-fwd [data-stagger],
+    .panel.is-out-bwd [data-stagger] {
+      transition-duration: 0.22s;
+      transition-delay: calc(var(--i, 0) * 12ms);
+    }
+
+    .panel.is-entering [data-stagger],
+    .panel.is-entering .display {
+      transition-duration: 0.42s;
+      transition-delay: calc(var(--i, 0) * 28ms);
+    }
+  }
 </style>
 
 <div class="stage" id="stage" data-blob-zone data-blob-mode="shard">
-  <div class="bottle cinema-shot" id="bottleA" aria-hidden="true">
-    <video class="cinema-media cinema-media--base cinema-media--forward" data-flow="forward" muted playsinline preload="auto">
-      <source src="assets/vslblack.mp4?sync=5" type="video/mp4" />
+  <div class="glacier-stage" id="glacierStage" aria-hidden="true">
+    <!-- Each segment bridges two scenes. Forward play = N→N+1, reverse = N+1→N. -->
+    <video class="glacier-video is-active" data-segment="0" muted playsinline preload="auto">
+      <source src="assets/glacier-video-1/video-1.mp4" type="video/mp4" />
     </video>
-    <video class="cinema-media cinema-media--base cinema-media--reverse" data-flow="reverse" muted playsinline preload="auto">
-      <source src="assets/vslblack-reverse.mp4?sync=1" type="video/mp4" />
+    <video class="glacier-video" data-segment="1" muted playsinline preload="auto">
+      <source src="assets/glacier-video-1/video-2.mp4" type="video/mp4" />
     </video>
-    <div class="cinema-reveal">
-      <video class="cinema-media cinema-media--reveal cinema-media--forward" data-flow="forward" muted playsinline preload="auto">
-        <source src="assets/vslwhite.mp4?sync=5" type="video/mp4" />
-      </video>
-      <video class="cinema-media cinema-media--reveal cinema-media--reverse" data-flow="reverse" muted playsinline preload="auto">
-        <source src="assets/vslwhite-reverse.mp4?sync=1" type="video/mp4" />
-      </video>
-    </div>
-  </div>
-
-  <div class="bottle cinema-shot" id="bottleB" aria-hidden="true">
-    <video class="cinema-media cinema-media--base cinema-media--forward" data-flow="forward" muted playsinline preload="auto">
-      <source src="assets/vslblack.mp4?sync=5" type="video/mp4" />
+    <video class="glacier-video" data-segment="2" muted playsinline preload="auto">
+      <source src="assets/glacier-video-1/video-3.mp4" type="video/mp4" />
     </video>
-    <video class="cinema-media cinema-media--base cinema-media--reverse" data-flow="reverse" muted playsinline preload="auto">
-      <source src="assets/vslblack-reverse.mp4?sync=1" type="video/mp4" />
+    <video class="mobile-glacier-video" id="mobileGlacierVideo" muted playsinline preload="auto" poster="assets/mobile/catalog-frame-01-bpc.jpg">
+      <source src="assets/mobile/catalog-mobile-h264.m4v" type="video/mp4" />
     </video>
-    <div class="cinema-reveal">
-      <video class="cinema-media cinema-media--reveal cinema-media--forward" data-flow="forward" muted playsinline preload="auto">
-        <source src="assets/vslwhite.mp4?sync=5" type="video/mp4" />
-      </video>
-      <video class="cinema-media cinema-media--reveal cinema-media--reverse" data-flow="reverse" muted playsinline preload="auto">
-        <source src="assets/vslwhite-reverse.mp4?sync=1" type="video/mp4" />
-      </video>
-    </div>
+    <img class="mobile-glacier-frame" id="mobileGlacierFrame" src="assets/mobile/catalog-frame-01-bpc.jpg" alt="" aria-hidden="true" loading="eager" decoding="async">
   </div>
 
   <div class="cursor-blob" aria-hidden="true">
@@ -1202,7 +2324,7 @@
   <div class="grain"></div>
 
   <header class="topbar">
-    <a class="brand" href="landing/index.html" aria-label="SERA — back to landing">
+    <a class="brand" href="index.html" aria-label="SERA — back to landing">
       <img class="brand-logo" src="sera-logo.png" alt="Sera Club peptide research">
     </a>
     <nav class="navlinks">
@@ -1211,6 +2333,11 @@
       <a href="#">Research</a>
       <a href="#">Account</a>
     </nav>
+    <button class="mobile-menu" id="mobileMenu" type="button" aria-label="Open mobile catalog menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
   </header>
 
   <section class="hero">
@@ -1303,7 +2430,7 @@
       <p class="catalog-sub">Three protocols for systemic repair. Select one to view its profile.</p>
       <p class="catalog-sub" style="margin-top:14px;font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--ink-mute);">
         <a href="landing/catalog.html" style="color:var(--accent);border-bottom:1px solid color-mix(in oklab, var(--accent) 30%, transparent);padding-bottom:2px;text-decoration:none;">
-          See all 13 compounds <span aria-hidden="true">&rarr;</span>
+          See all 10 compounds <span aria-hidden="true">&rarr;</span>
         </a>
       </p>
     </header>
@@ -1402,6 +2529,51 @@
       </a>
     </div>
 
+    <div class="mobile-index-grid" aria-label="Featured mobile catalog compounds">
+      <a class="mobile-index-card" href="#bpc-157" data-mobile-target="0">
+        <img src="assets/catalog-before-hover/Photoroom_20260513_001352.PNG" alt="BPC-157 vial" loading="lazy" />
+        <span>BPC-157</span>
+        <i aria-hidden="true">+</i>
+      </a>
+      <a class="mobile-index-card" href="#ghk-cu" data-mobile-target="1">
+        <img src="assets/catalog-before-hover/Photoroom_20260513_001459.PNG" alt="GHK-CU vial" loading="lazy" />
+        <span>GHK-CU</span>
+        <i aria-hidden="true">+</i>
+      </a>
+      <a class="mobile-index-card" href="#tb-500" data-mobile-target="2">
+        <img src="assets/catalog-before-hover/Photoroom_20260513_001516.PNG" alt="TB-500 vial" loading="lazy" />
+        <span>TB-500</span>
+        <i aria-hidden="true">+</i>
+      </a>
+      <a class="mobile-index-card" href="landing/catalog.html#ejc-1295">
+        <img src="assets/catalog-before-hover/Photoroom_20260513_001610.PNG" alt="EJC-1295 vial" loading="lazy" />
+        <span>EJC-1295</span>
+        <i aria-hidden="true">+</i>
+      </a>
+      <a class="mobile-index-card" href="landing/catalog.html#ipamorelin">
+        <img src="assets/catalog-before-hover/Photoroom_20260513_001538.PNG" alt="Ipamorelin vial" loading="lazy" />
+        <span>IPAMORELIN</span>
+        <i aria-hidden="true">+</i>
+      </a>
+      <a class="mobile-index-card" href="landing/catalog.html#mots-c">
+        <img src="assets/catalog-before-hover/Photoroom_20260513_001749.PNG" alt="MOTS-C vial" loading="lazy" />
+        <span>MOTS-C</span>
+        <i aria-hidden="true">+</i>
+      </a>
+      <a class="mobile-index-card" href="landing/catalog.html#glow">
+        <img src="assets/catalog-before-hover/Photoroom_20260513_001644.PNG" alt="GLOW vial" loading="lazy" />
+        <span>GLOW</span>
+        <i aria-hidden="true">+</i>
+      </a>
+      <div class="mobile-system-card" aria-label="Peptide system note">
+        <span class="sc">SC</span>
+        <span>
+          <b>Peptide System</b>
+          <p>All compounds are research use only and manufactured to the highest standards of purity and consistency.</p>
+        </span>
+      </div>
+    </div>
+
     <!-- Click hit-areas + labels for each bottle -->
     <button class="catalog-card" data-target="0" data-c-stagger style="--i: 1" aria-label="View BPC-157">
       <span class="card-label">
@@ -1440,6 +2612,14 @@
     </span>
     <span id="footSku"></span>
   </footer>
+
+  <nav class="mobile-bottom-nav" aria-label="Mobile page navigation">
+    <button type="button" data-mobile-dir="-1" aria-label="Previous page">←</button>
+    <span id="mobileSecNum">01</span>
+    <span class="of">/</span>
+    <span>04</span>
+    <button type="button" data-mobile-dir="1" aria-label="Next page">→</button>
+  </nav>
 </div>
 
 <script>
@@ -1615,7 +2795,10 @@
     lotVertical: $('lotVertical'),
     footSku: $('footSku'),
     dots: $('dots'),
-    bottleA: $('bottleA'), bottleB: $('bottleB'),
+    mobileVideo: $('mobileGlacierVideo'),
+    mobileFrame: $('mobileGlacierFrame'),
+    mobileSecNum: $('mobileSecNum'),
+    bottleA: $('glacierStage') || document.createElement('div'), bottleB: document.createElement('div'),
   };
 
   activeBottleEl = els.bottleA;
@@ -2133,8 +3316,183 @@
     });
   }
 
+  // Glacier-stage scene controller.
+  // 4 scenes, 3 video segments — each segment[i] bridges scene i and i+1.
+  // Forward step plays segment forward 0→end. Backward step scrubs it end→0.
+  const glacierSegments = Array.from(document.querySelectorAll('#glacierStage [data-segment]'))
+    .sort((a, b) => parseInt(a.dataset.segment, 10) - parseInt(b.dataset.segment, 10));
+  const SEGMENT_COUNT = glacierSegments.length; // 3
+  // At-rest mapping: which segment is visible at each scene, and at which end.
+  //  Scene 0: segment 0 at start.  Scenes 1..3: segment[s-1] at end.
+  function restState(scene) {
+    if (scene <= 0) return { seg: 0, position: 'start' };
+    return { seg: Math.min(scene - 1, SEGMENT_COUNT - 1), position: 'end' };
+  }
+
+  function endTime(v) {
+    return Math.max(0, (isFinite(v.duration) && v.duration > 0 ? v.duration : 3) - 0.04);
+  }
+  function freezeAt(v, position) {
+    const target = position === 'end' ? endTime(v) : 0.03;
+    const settle = () => {
+      try {
+        if (Math.abs(v.currentTime - target) > 0.05) v.currentTime = target;
+        v.pause();
+      } catch (e) {}
+    };
+    // Prime the decoder by briefly playing so the frame is actually painted,
+    // then pause. Without this, freshly loaded videos can show blank.
+    const prime = () => {
+      try { v.currentTime = target; } catch (e) {}
+      const p = v.play();
+      if (p && typeof p.then === 'function') {
+        p.then(() => setTimeout(settle, 30)).catch(settle);
+      } else {
+        setTimeout(settle, 30);
+      }
+    };
+    if (v.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+      prime();
+    } else if (v.readyState >= HTMLMediaElement.HAVE_METADATA) {
+      v.addEventListener('loadeddata', prime, { once: true });
+    } else {
+      v.addEventListener('loadeddata', prime, { once: true });
+      try { v.load(); } catch (e) {}
+    }
+  }
+  function showSegment(idx, position) {
+    glacierSegments.forEach(v => {
+      const segIdx = parseInt(v.dataset.segment, 10);
+      const isActive = segIdx === idx;
+      v.classList.toggle('is-active', isActive);
+      if (isActive) freezeAt(v, position);
+      else {
+        try { v.pause(); } catch (e) {}
+      }
+    });
+  }
+  function freezeScene(scene) {
+    const r = restState(scene);
+    showSegment(r.seg, r.position);
+  }
+  glacierSegments.forEach(v => freezeAt(v, 'start'));
+
+  let glacierAbort = null;
+  function abortInFlight() {
+    if (glacierAbort) {
+      try { glacierAbort(); } catch (e) {}
+      glacierAbort = null;
+    }
+  }
+
+  function playSegmentForward(segIdx) {
+    abortInFlight();
+    const v = glacierSegments[segIdx];
+    if (!v) return Promise.resolve();
+    return new Promise(resolve => {
+      let done = false;
+      const finish = () => {
+        if (done) return; done = true;
+        try { v.pause(); } catch (e) {}
+        glacierAbort = null;
+        resolve();
+      };
+      glacierAbort = finish;
+      const start = () => {
+        try {
+          v.playbackRate = 1;
+          v.currentTime = 0.03;
+        } catch (e) {}
+        // Start playback while still hidden so the decoder can produce frames,
+        // then swap visibility on the first presented frame.
+        try {
+          const p = v.play();
+          if (p) p.catch(() => {});
+        } catch (e) {}
+        let swapped = false;
+        const swapAndMonitor = () => {
+          if (swapped) return; swapped = true;
+          glacierSegments.forEach(other => other.classList.toggle('is-active', other === v));
+          const dur = (isFinite(v.duration) && v.duration > 0 ? v.duration : 3) * 1000;
+          const watchdog = setTimeout(finish, dur + 250);
+          const onTimeUpdate = () => {
+            if (done) { v.removeEventListener('timeupdate', onTimeUpdate); return; }
+            if (v.currentTime >= endTime(v) - 0.04 || v.ended) {
+              clearTimeout(watchdog);
+              v.removeEventListener('timeupdate', onTimeUpdate);
+              finish();
+            }
+          };
+          v.addEventListener('timeupdate', onTimeUpdate);
+        };
+        if ('requestVideoFrameCallback' in v) {
+          v.requestVideoFrameCallback(swapAndMonitor);
+          setTimeout(swapAndMonitor, 140);
+        } else {
+          setTimeout(swapAndMonitor, 60);
+        }
+      };
+      if (v.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) start();
+      else v.addEventListener('loadeddata', start, { once: true });
+    });
+  }
+
+  function playSegmentBackward(segIdx) {
+    abortInFlight();
+    const v = glacierSegments[segIdx];
+    if (!v) return Promise.resolve();
+    glacierSegments.forEach(other => other.classList.toggle('is-active', other === v));
+    return new Promise(resolve => {
+      let cancelled = false;
+      let rafId = null;
+      const finish = () => {
+        if (cancelled) return; cancelled = true;
+        if (rafId) cancelAnimationFrame(rafId);
+        try { v.pause(); v.currentTime = 0; } catch (e) {}
+        glacierAbort = null;
+        resolve();
+      };
+      glacierAbort = finish;
+      const begin = () => {
+        const dur = isFinite(v.duration) && v.duration > 0 ? v.duration : 3;
+        const playMs = Math.min(Math.max(dur * 1000 * 0.8, 800), 1800);
+        try { v.pause(); v.currentTime = endTime(v); } catch (e) {}
+        const startedAt = performance.now();
+        const step = () => {
+          if (cancelled) return;
+          const elapsed = performance.now() - startedAt;
+          const progress = Math.min(elapsed / playMs, 1);
+          const t = dur * (1 - progress);
+          try { v.currentTime = Math.max(0, t); } catch (e) {}
+          if (progress >= 1) { finish(); return; }
+          rafId = requestAnimationFrame(step);
+        };
+        rafId = requestAnimationFrame(step);
+      };
+      if (v.readyState >= HTMLMediaElement.HAVE_METADATA) begin();
+      else v.addEventListener('loadedmetadata', begin, { once: true });
+    });
+  }
+
+  let lastDirection = 'fwd';
+  let lastSceneIdx = 0;
+  function sceneIndexOf(scene) {
+    if (scene === CATALOG_SCENE) return CATALOG_INDEX;
+    const i = PAGES.indexOf(scene);
+    return i >= 0 ? i : CATALOG_INDEX;
+  }
   function setBottleImage(scene, options) {
-    return transitionSceneTo(scene, options);
+    const toScene = sceneIndexOf(scene);
+    const fromScene = lastSceneIdx;
+    lastSceneIdx = toScene;
+    if (options && options.cut) {
+      freezeScene(toScene);
+      return Promise.resolve();
+    }
+    if (toScene === fromScene + 1) return playSegmentForward(fromScene);
+    if (toScene === fromScene - 1) return playSegmentBackward(toScene);
+    freezeScene(toScene);
+    return Promise.resolve();
   }
 
   // ------------------------------------------------------------------
@@ -2169,10 +3527,36 @@
   const CATALOG_ENTER = 800;
   const PANEL_TRANSITION_CLASSES = ['is-out-fwd', 'is-out-bwd', 'is-pre-in-fwd', 'is-pre-in-bwd', 'is-entering'];
   const TRANSITION_WATCHDOG_MS = 7800;
+  const MOBILE_SCENE_FRAMES = [
+    'assets/mobile/catalog-frame-01-bpc.jpg',
+    'assets/mobile/catalog-frame-02-ghk.jpg',
+    'assets/mobile/catalog-frame-03-tb.jpg',
+    'assets/mobile/catalog-frame-04-index.jpg',
+  ];
+  const MOBILE_TRANSITION_VIDEOS = [
+    'assets/mobile/catalog-transition-01-02.m4v?hq=2',
+    'assets/mobile/catalog-transition-02-03.m4v?hq=2',
+    'assets/mobile/catalog-transition-03-04.m4v?hq=2',
+  ];
+  const MOBILE_REVERSE_TRANSITION_VIDEOS = [
+    'assets/mobile/catalog-transition-02-01.mp4?hq=2',
+    'assets/mobile/catalog-transition-03-02.mp4?hq=2',
+    'assets/mobile/catalog-transition-04-03.mp4?hq=2',
+  ];
+  const MOBILE_VIDEO_MAX_RATE = 3.6;
+  const MOBILE_VIDEO_REVERSE_MAX_RATE = 3.6;
+  const MOBILE_VIDEO_FORWARD_TARGET_SECONDS = 2.4;
+  const MOBILE_VIDEO_REVERSE_TARGET_SECONDS = 2.4;
 
   const stageEl = document.getElementById('stage');
   const catalogEl = document.getElementById('catalog');
   const browseCta = document.getElementById('browseCta');
+  const mobileLayoutQuery = window.matchMedia('(max-width: 760px)');
+  const compactPhoneQuery = window.matchMedia('(max-width: 430px) and (max-height: 720px)');
+  let mobileVideoRaf = null;
+  let mobileVideoToken = 0;
+  let mobileVideoAnimating = false;
+  let mobileSwipeStart = null;
   const blobModeButtons = document.querySelectorAll('#blobModeSwitcher [data-blob-mode]');
   const BLOB_MODE_CONFIG = {
     shard: { lag: 0.24, idleScale: 0.78, activeScale: 0.96 },
@@ -2277,6 +3661,7 @@
     window.addEventListener('resize', () => {
       pointer.targetX = Math.min(pointer.targetX, window.innerWidth);
       pointer.targetY = Math.min(pointer.targetY, window.innerHeight);
+      syncMobileFrame();
     });
 
     requestAnimationFrame(animateBlob);
@@ -2285,6 +3670,210 @@
   function updateDots() {
     const dotEls = els.dots.querySelectorAll('i');
     dotEls.forEach((d, i) => d.classList.toggle('on', i === currentIndex));
+    updateMobileNav();
+    syncMobileFrame();
+  }
+
+  function isMobileLayout() {
+    return mobileLayoutQuery.matches;
+  }
+
+  function isCompactPhoneLayout() {
+    return compactPhoneQuery.matches;
+  }
+
+  function getPanelTiming() {
+    if (isCompactPhoneLayout()) {
+      return {
+        exitDur: 220,
+        exitStag: 12,
+        enterDur: 420,
+        enterStag: 28,
+      };
+    }
+    return {
+      exitDur: EXIT_DUR,
+      exitStag: EXIT_STAG,
+      enterDur: ENTER_DUR,
+      enterStag: ENTER_STAG,
+    };
+  }
+
+  function updateMobileNav() {
+    if (!els.mobileSecNum) return;
+    els.mobileSecNum.textContent = String(currentIndex + 1).padStart(2, '0');
+  }
+
+  function syncMobileFrame(index = currentIndex) {
+    const frame = els.mobileFrame;
+    if (!isMobileLayout()) return;
+    if (!frame) return;
+    if (mobileVideoAnimating) return;
+    const nextSrc = MOBILE_SCENE_FRAMES[index] ?? MOBILE_SCENE_FRAMES[0];
+    if (!frame.src.endsWith(nextSrc)) {
+      frame.src = nextSrc;
+    }
+    lockMobileVideo(index);
+  }
+
+  function cancelMobileVideoAnimation() {
+    mobileVideoToken++;
+    mobileVideoAnimating = false;
+    if (mobileVideoRaf) {
+      cancelAnimationFrame(mobileVideoRaf);
+      mobileVideoRaf = null;
+    }
+    if (els.mobileVideo) {
+      els.mobileVideo.classList.remove('is-playing', 'is-reverse-playing');
+    }
+  }
+
+  function whenMobileVideoReady() {
+    const video = els.mobileVideo;
+    if (!video) return Promise.resolve(null);
+    if (video.readyState >= HTMLMediaElement.HAVE_METADATA) return Promise.resolve(video);
+    return new Promise(resolve => {
+      video.addEventListener('loadedmetadata', () => resolve(video), { once: true });
+      try { video.load(); } catch (error) { resolve(video); }
+    });
+  }
+
+  function setMobileFallbackFrame(index) {
+    const frame = els.mobileFrame;
+    if (!frame) return;
+    const nextSrc = MOBILE_SCENE_FRAMES[index] ?? MOBILE_SCENE_FRAMES[0];
+    if (!frame.src.endsWith(nextSrc)) {
+      frame.src = nextSrc;
+    }
+  }
+
+  function lockMobileVideo(index = currentIndex) {
+    const video = els.mobileVideo;
+    if (!video || !isMobileLayout() || mobileVideoAnimating) return;
+    try {
+      video.pause();
+      video.playbackRate = 1;
+      video.classList.remove('is-playing', 'is-reverse-playing');
+    } catch (error) {}
+  }
+
+  function setMobileTransitionSource(src) {
+    const video = els.mobileVideo;
+    if (!video) return;
+    const nextSrc = new URL(src, window.location.href).href;
+    if (video.currentSrc !== nextSrc && video.src !== nextSrc) {
+      video.src = src;
+      try { video.load(); } catch (error) {}
+    }
+  }
+
+  function getMobileTransitionQueue(fromIndex, toIndex) {
+    const queue = [];
+    if (toIndex > fromIndex) {
+      for (let i = fromIndex; i < toIndex; i++) {
+        if (!MOBILE_TRANSITION_VIDEOS[i]) break;
+        queue.push({ src: MOBILE_TRANSITION_VIDEOS[i], from: i, to: i + 1, reverse: false });
+      }
+      return queue;
+    }
+    for (let i = fromIndex; i > toIndex; i--) {
+      if (!MOBILE_REVERSE_TRANSITION_VIDEOS[i - 1]) break;
+      queue.push({ src: MOBILE_REVERSE_TRANSITION_VIDEOS[i - 1], from: i, to: i - 1, reverse: true });
+    }
+    return queue;
+  }
+
+  function playMobileTransitionSegment(segment, token) {
+    const video = els.mobileVideo;
+    if (!video) return Promise.resolve(false);
+    setMobileFallbackFrame(segment.reverse ? segment.to : segment.from);
+    setMobileTransitionSource(segment.src);
+
+    return whenMobileVideoReady().then(() => new Promise(resolve => {
+      if (token !== mobileVideoToken) {
+        resolve(false);
+        return;
+      }
+
+      const finish = success => {
+        if (token !== mobileVideoToken) {
+          resolve(false);
+          return;
+        }
+        if (mobileVideoRaf) {
+          cancelAnimationFrame(mobileVideoRaf);
+          mobileVideoRaf = null;
+        }
+        try {
+          video.pause();
+          video.playbackRate = 1;
+          video.classList.remove('is-playing', 'is-reverse-playing');
+        } catch (error) {}
+        setMobileFallbackFrame(segment.to);
+        resolve(success);
+      };
+
+      try {
+        video.pause();
+        video.currentTime = 0;
+        const duration = video.duration || 8;
+        const targetSeconds = segment.reverse ? MOBILE_VIDEO_REVERSE_TARGET_SECONDS : MOBILE_VIDEO_FORWARD_TARGET_SECONDS;
+        const maxRate = segment.reverse ? MOBILE_VIDEO_REVERSE_MAX_RATE : MOBILE_VIDEO_MAX_RATE;
+        video.playbackRate = Math.min(maxRate, Math.max(1, duration / targetSeconds));
+        video.classList.add('is-playing');
+        video.classList.toggle('is-reverse-playing', segment.reverse);
+        video.play().catch(() => finish(false));
+      } catch (error) {
+        finish(false);
+        return;
+      }
+
+      const startAt = performance.now();
+      const monitor = now => {
+        if (token !== mobileVideoToken) return;
+        const duration = video.duration || 8;
+        const maxRate = segment.reverse ? MOBILE_VIDEO_REVERSE_MAX_RATE : MOBILE_VIDEO_MAX_RATE;
+        const timedOut = now - startAt > Math.max(1100, (duration / maxRate) * 1000 + 560);
+        if (video.ended || video.currentTime >= duration - 0.08 || timedOut) {
+          finish(true);
+          return;
+        }
+        mobileVideoRaf = requestAnimationFrame(monitor);
+      };
+
+      mobileVideoRaf = requestAnimationFrame(monitor);
+    }));
+  }
+
+  async function animateMobileVideoTo(fromIndex, toIndex) {
+    const video = els.mobileVideo;
+    if (!video || !isMobileLayout()) {
+      setMobileFallbackFrame(toIndex);
+      return;
+    }
+    cancelMobileVideoAnimation();
+    const token = mobileVideoToken;
+    const queue = getMobileTransitionQueue(fromIndex, toIndex);
+
+    if (!queue.length) {
+      setMobileFallbackFrame(toIndex);
+      return;
+    }
+
+    mobileVideoAnimating = true;
+    try {
+      for (const segment of queue) {
+        const played = await playMobileTransitionSegment(segment, token);
+        if (!played || token !== mobileVideoToken) return;
+      }
+      if (token !== mobileVideoToken) return;
+    } finally {
+      if (token === mobileVideoToken) {
+        mobileVideoAnimating = false;
+        setMobileFallbackFrame(toIndex);
+        lockMobileVideo(toIndex);
+      }
+    }
   }
 
   function updateBrowseCta() {
@@ -2323,12 +3912,92 @@
     }, enterTotal + 220);
   }
 
+  async function goToMobilePage(index) {
+    if (index < 0 || index >= TOTAL_PAGES) return;
+    if (mobileVideoAnimating) return;
+    if (index === currentIndex) {
+      syncMobileFrame(index);
+      return;
+    }
+    const fromIndex = currentIndex;
+    pendingPageRequest = null;
+    isTransitioning = false;
+    transitionToken++;
+    clearPanelTransitionClasses();
+    els.panel.classList.remove('initial-rise');
+    const mobileNavToken = transitionToken;
+    const direction = index > fromIndex ? 'fwd' : 'bwd';
+    const outClass = `is-out-${direction}`;
+    const preInClass = `is-pre-in-${direction}`;
+    const fromCatalog = fromIndex === CATALOG_INDEX;
+    const toCatalog = index === CATALOG_INDEX;
+    const timing = getPanelTiming();
+    const exitTotal = timing.exitDur + (STAGGER_COUNT - 1) * timing.exitStag;
+    const animationDone = animateMobileVideoTo(fromIndex, index);
+
+    stageEl.classList.add('is-video-priority');
+
+    if (toCatalog && !fromCatalog) {
+      els.panel.classList.add(outClass);
+      await Promise.all([delay(exitTotal), animationDone]);
+      if (mobileNavToken !== transitionToken) return;
+
+      applyAccent({
+        accent: '#4d7aa7',
+        accentDeep: '#2f5680',
+        accentGlow: 'rgba(77,122,167,0.18)',
+        accentInk: '#f6f9fc',
+      });
+      currentIndex = index;
+      stageEl.classList.remove('is-video-priority');
+      stageEl.classList.add('mode-catalog');
+      catalogEl.setAttribute('aria-hidden', 'false');
+      setMobileFallbackFrame(index);
+      updateDots();
+      updateBrowseCta();
+      pinStageToTop();
+      return;
+    }
+
+    if (fromCatalog && !toCatalog) {
+      stageEl.classList.remove('mode-catalog');
+      catalogEl.setAttribute('aria-hidden', 'true');
+      els.panel.classList.add(preInClass);
+    } else {
+      els.panel.classList.add(outClass);
+      await delay(exitTotal);
+      if (mobileNavToken !== transitionToken) return;
+      els.panel.classList.remove(outClass);
+      els.panel.classList.add(preInClass);
+    }
+
+    currentIndex = index;
+
+    const page = PAGES[index];
+    applyAccent(page);
+    renderPanel(page);
+    stageEl.classList.remove('mode-catalog');
+    catalogEl.setAttribute('aria-hidden', 'true');
+
+    updateDots();
+    updateBrowseCta();
+    pinStageToTop();
+    await animationDone;
+    if (mobileNavToken !== transitionToken) return;
+    stageEl.classList.remove('is-video-priority');
+    await enterPanel(preInClass);
+  }
+
   // ------------------------------------------------------------------
   // goToPage — mode-aware orchestrator
   // ------------------------------------------------------------------
   function goToPage(index, direction) {
     if (index < 0) return;
     if (index >= TOTAL_PAGES) return;
+    if (isMobileLayout()) {
+      goToMobilePage(index);
+      return;
+    }
     if (isTransitioning) {
       pendingPageRequest = { index, direction };
       return;
@@ -2336,6 +4005,7 @@
     if (index === currentIndex) return;
     pendingPageRequest = null;
     if (!direction) direction = (index > currentIndex) ? 'fwd' : 'bwd';
+    lastDirection = direction;
     pinStageToTop();
 
     const fromCatalog = currentIndex === CATALOG_INDEX;
@@ -2370,7 +4040,8 @@
     return new Promise((resolve) => {
       let started = false;
       let settled = false;
-      const enterTotal = ENTER_DUR + (STAGGER_COUNT - 1) * ENTER_STAG;
+      const timing = getPanelTiming();
+      const enterTotal = timing.enterDur + (STAGGER_COUNT - 1) * timing.enterStag;
 
       const finish = () => {
         if (settled) return;
@@ -2403,7 +4074,8 @@
     const videoDone = setBottleImage(page, { smoothReverse: direction === 'bwd' });
     els.panel.classList.add(outClass);
 
-    const exitTotal = EXIT_DUR + (STAGGER_COUNT - 1) * EXIT_STAG;
+    const timing = getPanelTiming();
+    const exitTotal = timing.exitDur + (STAGGER_COUNT - 1) * timing.exitStag;
     await Promise.all([delay(exitTotal), videoDone]);
 
     currentIndex = index;
@@ -2430,7 +4102,8 @@
     els.panel.classList.add(outClass);
     const videoDone = setBottleImage(CATALOG_SCENE);
 
-    const exitTotal = EXIT_DUR + (STAGGER_COUNT - 1) * EXIT_STAG;
+    const timing = getPanelTiming();
+    const exitTotal = timing.exitDur + (STAGGER_COUNT - 1) * timing.exitStag;
     await Promise.all([delay(exitTotal), videoDone]);
 
     currentIndex = index;
@@ -2490,12 +4163,8 @@
     updateDots();
     updateBrowseCta();
 
-    // Detail bottle frame (page 0) is a paused timeline anchor.
-    currentSceneTime = page.sceneTime || 0;
-    cueScene(activeBottleEl, page).then(() => {
-      activeBottleEl.classList.add('is-active');
-      primeReverseScene(activeBottleEl, page.sceneTime || 0);
-    });
+    // Activate the glacier video for the initial scene.
+    setBottleImage(page);
 
     // Pre-load catalog assets so they're ready when the user navigates there
     document.getElementById('catalogBg').src        = IMG_ROCKS;
@@ -2516,6 +4185,25 @@
     btn.addEventListener('click', () => {
       const dir = parseInt(btn.dataset.dir, 10);
       goToPage(currentIndex + dir, dir > 0 ? 'fwd' : 'bwd');
+    });
+  });
+
+  document.querySelectorAll('[data-mobile-dir]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const dir = parseInt(btn.dataset.mobileDir, 10);
+      goToPage(currentIndex + dir, dir > 0 ? 'fwd' : 'bwd');
+    });
+  });
+
+  document.getElementById('mobileMenu').addEventListener('click', () => {
+    goToPage(CATALOG_INDEX, 'fwd');
+  });
+
+  document.querySelectorAll('[data-mobile-target]').forEach(link => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      const idx = parseInt(link.dataset.mobileTarget, 10);
+      goToPage(idx, 'fwd');
     });
   });
 
@@ -2556,6 +4244,49 @@
     if (e.key === 'ArrowLeft')  goToPage(currentIndex - 1, 'bwd');
   });
 
+  // Mobile swipe navigation: horizontal drag advances the same animated video timeline.
+  stageEl.addEventListener('touchstart', (event) => {
+    if (!isMobileLayout()) return;
+    if (event.touches.length !== 1) return;
+    if (event.target.closest('button, a, input, .qty, .actions, .mobile-index-grid')) return;
+    const touch = event.touches[0];
+    mobileSwipeStart = {
+      x: touch.clientX,
+      y: touch.clientY,
+      at: performance.now(),
+    };
+  }, { passive: true });
+
+  stageEl.addEventListener('touchmove', (event) => {
+    if (!isMobileLayout()) return;
+    if (!mobileSwipeStart || event.touches.length !== 1) return;
+    const touch = event.touches[0];
+    const dx = touch.clientX - mobileSwipeStart.x;
+    const dy = touch.clientY - mobileSwipeStart.y;
+    if (Math.abs(dx) > 14 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+      event.preventDefault();
+    }
+  }, { passive: false });
+
+  stageEl.addEventListener('touchend', (event) => {
+    if (!isMobileLayout() || !mobileSwipeStart) return;
+    const touch = event.changedTouches[0];
+    const dx = touch.clientX - mobileSwipeStart.x;
+    const dy = touch.clientY - mobileSwipeStart.y;
+    const elapsed = Math.max(performance.now() - mobileSwipeStart.at, 1);
+    const velocity = Math.abs(dx) / elapsed;
+    mobileSwipeStart = null;
+
+    if (Math.abs(dx) < 48 && velocity < 0.45) return;
+    if (Math.abs(dx) < Math.abs(dy) * 1.15) return;
+
+    if (dx < 0) {
+      goToPage(currentIndex + 1, 'fwd');
+    } else {
+      goToPage(currentIndex - 1, 'bwd');
+    }
+  }, { passive: true });
+
   // Scroll-down on All Compounds → slide into full catalog page (landing/catalog.html)
   let catalogScrollAccum = 0;
   let catalogScrollFiring = false;
@@ -2570,6 +4301,7 @@
     }, 320);
   }
   document.addEventListener('wheel', (e) => {
+    if (isMobileLayout()) return;
     if (catalogScrollFiring) return;
     if (currentIndex !== CATALOG_INDEX) return;
     if (isTransitioning) return;
@@ -2585,10 +4317,12 @@
   }, { passive: true });
   let catalogTouchStartY = null;
   document.addEventListener('touchstart', (e) => {
+    if (isMobileLayout()) return;
     if (currentIndex !== CATALOG_INDEX) return;
     catalogTouchStartY = e.touches[0].clientY;
   }, { passive: true });
   document.addEventListener('touchmove', (e) => {
+    if (isMobileLayout()) return;
     if (catalogTouchStartY === null) return;
     if (currentIndex !== CATALOG_INDEX) return;
     if (e.target.closest('.catalog-listings')) return;

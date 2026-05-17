@@ -1,10 +1,7 @@
 // SERA landing — minimal choreography
-// (1) Sync the two cinema videos (black base + white reveal) so the bottle
-//     reveal lines up frame-for-frame as the page loads.
-// (2) Cross-fade the reveal mask in shortly after first paint so the bottle
-//     "breathes" into being.
-// (3) Hide the scroll hint once the user scrolls.
-// (4) Pre-warm a hidden preload for catalog.html so the CTA hand-off is instant.
+// (1) Reveal the extracted final frame of glacier video 3 once it is decoded.
+// (2) Hide the scroll hint once the user scrolls.
+// (3) Pre-warm a hidden preload for catalog.html so the CTA hand-off is instant.
 
 (function () {
   'use strict';
@@ -12,20 +9,19 @@
   const base = document.getElementById('cinemaBase');
   const hint = document.getElementById('scrollHint');
   const cta  = document.getElementById('enterCatalog');
+  const catalogUrl = cta ? cta.href : new URL('sera_club_catalog.html', document.baseURI).href;
 
-  // ---- Play the bottle video --------------------------------------------
-  function playBase() {
+  // ---- Reveal the static glacier frame ---------------------------------
+  function revealFrame() {
     if (!base) return;
-    base.play().catch(() => {});
+    if (base.complete) {
+      base.classList.add('is-ready');
+    } else {
+      base.addEventListener('load', () => base.classList.add('is-ready'), { once: true });
+      base.addEventListener('error', () => base.classList.add('is-ready'), { once: true });
+    }
   }
-  if (base) {
-    if (base.readyState >= 3) playBase();
-    else base.addEventListener('canplay', playBase, { once: true });
-    base.addEventListener('ended', () => {
-      base.currentTime = 0;
-      playBase();
-    });
-  }
+  revealFrame();
 
   // ---- Scroll hint auto-hide -------------------------------------------
   let hidden = false;
@@ -45,7 +41,7 @@
     if (document.querySelector('link[data-prefetch="catalog"]')) return;
     const l = document.createElement('link');
     l.rel = 'prefetch';
-    l.href = '../sera_club_catalog.html';
+    l.href = catalogUrl;
     l.as = 'document';
     l.dataset.prefetch = 'catalog';
     document.head.appendChild(l);
@@ -58,13 +54,10 @@
   }
   cta && cta.addEventListener('mouseenter', prefetchCatalog, { once: true });
 
-  // ---- Pause videos when the tab is hidden -----------------------------
+  // ---- Keep the frame visible across tab visibility changes ------------
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      base && base.pause();
-    } else {
-      playBase();
-    }
+    if (!base) return;
+    if (!document.hidden && !base.classList.contains('is-ready')) revealFrame();
   });
 
 })();
