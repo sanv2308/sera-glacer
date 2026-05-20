@@ -11,9 +11,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@200;300;400;500;600&family=Manrope:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
 
-<link rel="stylesheet" href="landing/landing.css?glacier=20260517root" />
+<link rel="stylesheet" href="shared/site.css?v=20260519nav4" />
+<link rel="stylesheet" href="landing/landing.css?glacier=20260519nav4" />
 </head>
-<body>
+<body data-page="home">
+
+<header id="site-nav"></header>
 
 <svg class="filter-defs" aria-hidden="true">
   <filter id="hero-grain">
@@ -35,18 +38,6 @@
       <rect width="100%" height="100%" filter="url(#hero-grain)" opacity="0.06"></rect>
     </svg>
   </div>
-
-  <header class="topbar">
-    <a class="brand" href="index.html" aria-label="SERA, peptide research">
-      <img class="brand-logo" src="sera-logo.png" alt="SERA" />
-    </a>
-    <nav class="navlinks" aria-label="Primary">
-      <a href="landing/catalog.html">Catalog</a>
-      <a href="#protocols">Protocols</a>
-      <a href="#research">Research</a>
-      <a href="#account" class="nav-signin">Sign in <span aria-hidden="true">→</span></a>
-    </nav>
-  </header>
 
   <section class="hero" aria-labelledby="heroTitle">
 
@@ -150,6 +141,9 @@
 
 </main>
 
+<footer id="site-footer"></footer>
+
 <script src="landing/landing.js?glacier=20260517root" defer></script>
+<script src="shared/site.js?v=20260519nav4" defer></script>
 </body>
 </html>

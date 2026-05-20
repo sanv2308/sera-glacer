@@ -12,6 +12,10 @@
 <link rel="preload" href="assets/mobile/catalog-transition-02-01.mp4?hq=2" as="video" type="video/mp4">
 <link rel="preload" href="assets/mobile/catalog-transition-03-02.mp4?hq=2" as="video" type="video/mp4">
 <link rel="preload" href="assets/mobile/catalog-transition-04-03.mp4?hq=2" as="video" type="video/mp4">
+<link rel="preload" href="assets/mobile/catalog-frame-01-bpc.jpg" as="image">
+<link rel="preload" href="assets/mobile/catalog-frame-02-ghk.jpg" as="image">
+<link rel="preload" href="assets/mobile/catalog-frame-03-tb.jpg" as="image">
+<link rel="preload" href="assets/mobile/catalog-frame-04-index.jpg" as="image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@200;300;400;500;600&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -379,6 +383,32 @@
   .navlinks a.active::after {
     content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 1px; background: var(--accent);
     transition: background .8s cubic-bezier(.4, 0, .2, 1);
+  }
+  .nav-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    margin-left: 28px;
+  }
+  .nav-cart {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: var(--ink-soft);
+    border-radius: 6px;
+    text-decoration: none;
+    transition: color .25s ease, background .25s ease;
+  }
+  .nav-cart:hover {
+    color: var(--ink);
+    background: rgba(23, 35, 52, 0.04);
+  }
+  .nav-cart svg {
+    display: block;
+    width: 19px;
+    height: 19px;
   }
 
   /* Hero content */
@@ -855,7 +885,9 @@
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    transition: opacity .65s cubic-bezier(.32,.72,.24,1),
+    /* Entry: medium fade so the catalog overlays gracefully on the video's
+       final motion. Exit still uses the slower .65s from the base rule. */
+    transition: opacity .22s ease,
                 visibility 0s linear 0s;
   }
   /* Hide detail elements when in catalog mode */
@@ -949,7 +981,7 @@
   }
   .card-glow[data-target="0"] {
     left: 12%; top: 75%;
-    background: radial-gradient(circle, rgba(158,181,209,0.55) 0%, rgba(158,181,209,0.18) 40%, transparent 70%);
+    background: radial-gradient(circle, rgba(18,22,30,0.62) 0%, rgba(18,22,30,0.22) 40%, transparent 70%);
   }
   .card-glow[data-target="1"] {
     left: 49%; top: 38%;
@@ -1198,6 +1230,116 @@
     opacity: 1;
     transform: translateY(0);
   }
+
+  /* ----------------------------------------------------------------------
+     PREMIUM ENTRY — 04/04 All Compounds catalog UI
+     Each text overlay and bottle hit area has its own motion fingerprint
+     when entering mode-catalog. Fast reset when leaving.
+     ---------------------------------------------------------------------- */
+
+  /* EYEBROW — letter-spacing compresses inward + fade-slide */
+  .catalog .catalog-eyebrow {
+    opacity: 0;
+    transform: translateX(-6px);
+    letter-spacing: 1.4em;
+    will-change: opacity, transform, letter-spacing;
+    transition:
+      opacity .3s ease,
+      transform .3s ease,
+      letter-spacing .3s ease;
+  }
+  .stage.mode-catalog .catalog .catalog-eyebrow {
+    opacity: 1;
+    transform: translateX(0);
+    letter-spacing: 0.4em;
+    transition:
+      opacity .95s cubic-bezier(.32,.72,.24,1) 0ms,
+      transform .95s cubic-bezier(.32,.72,.24,1) 0ms,
+      letter-spacing 1.15s cubic-bezier(.18,.86,.32,1) 0ms;
+  }
+
+  /* TITLE — blur in + lift + scale anticipation */
+  .catalog .catalog-title {
+    opacity: 0;
+    transform: translateY(28px) scale(1.04);
+    filter: blur(8px);
+    will-change: opacity, transform, filter;
+    transition:
+      opacity .35s ease,
+      transform .35s ease,
+      filter .35s ease;
+  }
+  .stage.mode-catalog .catalog .catalog-title {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+    transition:
+      opacity .95s cubic-bezier(.32,.72,.24,1) 140ms,
+      transform 1.05s cubic-bezier(.18,.86,.32,1.06) 140ms,
+      filter .9s cubic-bezier(.32,.72,.24,1) 140ms;
+  }
+
+  /* SUBTITLES — staggered gentle lift + fade (second one trails) */
+  .catalog .catalog-sub {
+    opacity: 0;
+    transform: translateY(18px);
+    will-change: opacity, transform;
+    transition:
+      opacity .3s ease,
+      transform .3s ease;
+  }
+  .stage.mode-catalog .catalog .catalog-sub {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity .85s cubic-bezier(.32,.72,.24,1) 320ms,
+      transform .85s cubic-bezier(.32,.72,.24,1) 320ms;
+  }
+  .stage.mode-catalog .catalog .catalog-sub + .catalog-sub {
+    transition-delay: 440ms;
+  }
+
+  /* "See all 10 compounds" arrow — slides + fades in last */
+  .catalog .catalog-sub a span[aria-hidden="true"] {
+    display: inline-block;
+    opacity: 0;
+    transform: translateX(-6px);
+    will-change: opacity, transform;
+    transition:
+      opacity .3s ease,
+      transform .3s ease;
+  }
+  .stage.mode-catalog .catalog .catalog-sub a span[aria-hidden="true"] {
+    opacity: 1;
+    transform: translateX(0);
+    transition:
+      opacity .7s cubic-bezier(.32,.72,.24,1) 640ms,
+      transform .7s cubic-bezier(.32,.72,.24,1) 640ms;
+  }
+
+  /* BOTTLE HIT-AREA CARDS — staggered rise with per-side rotation drift.
+     Overrides the generic .catalog [data-c-stagger] for these specifically. */
+  .catalog [data-c-stagger].catalog-card {
+    opacity: 0;
+    transform: translateY(32px) scale(0.96);
+    will-change: opacity, transform;
+    transition:
+      opacity .3s ease,
+      transform .3s ease;
+  }
+  .catalog [data-c-stagger].catalog-card[data-target="0"] {
+    transform: translateY(32px) scale(0.96) rotate(-1.4deg);
+  }
+  .catalog [data-c-stagger].catalog-card[data-target="2"] {
+    transform: translateY(32px) scale(0.96) rotate(1.4deg);
+  }
+  .stage.mode-catalog .catalog [data-c-stagger].catalog-card {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0deg);
+    transition:
+      opacity .9s cubic-bezier(.18,.86,.32,1) calc(200ms + var(--i, 0) * 110ms),
+      transform 1.05s cubic-bezier(.18,.86,.32,1.06) calc(200ms + var(--i, 0) * 110ms);
+  }
   /* Bottles fade in via keyframe animation (with stagger) so hover transitions
      stay snappy. Exit just uses the opacity transition. */
   .catalog-bottle { opacity: 0; }
@@ -1375,16 +1517,31 @@
       inset: 0 0 auto 0;
       z-index: 8;
       align-items: flex-start;
-      padding: max(24px, calc(env(safe-area-inset-top) + 18px)) 22px 0 18px;
+      padding: max(24px, calc(env(safe-area-inset-top) + 18px)) 18px 0 14px;
     }
 
     .brand-logo {
-      width: min(43vw, 166px);
-      transform: translate(-18px, -4px);
+      width: min(46vw, 172px);
+      transform: translate(-27%, -4px);
     }
 
     .navlinks {
       display: none;
+    }
+
+    .nav-actions {
+      gap: 12px;
+      margin-left: 0;
+    }
+
+    .nav-cart {
+      width: 30px;
+      height: 30px;
+    }
+
+    .nav-cart svg {
+      width: 18px;
+      height: 18px;
     }
 
     .mobile-menu {
@@ -1410,21 +1567,27 @@
     .hero {
       display: block;
       min-height: 100%;
-      padding: clamp(152px, 19svh, 178px) 0 0 29px;
+      padding: clamp(112px, 15svh, 140px) 0 clamp(108px, 14svh, 148px) 29px;
     }
 
     .panel {
-      width: min(55vw, 265px);
-      max-width: 265px;
+      width: min(48vw, 202px);
+      max-width: 202px;
       padding: 0;
     }
 
     .section-id {
       gap: 14px;
-      margin: 0 0 34px;
+      margin: 0 0 26px;
       color: var(--ink);
       font-size: 11px;
       letter-spacing: 0.28em;
+    }
+
+    /* Keep numbers tight even though the .section-id row has wide letter-spacing */
+    .section-id .num,
+    .section-id .of {
+      letter-spacing: 0;
     }
 
     .section-id .rule {
@@ -1444,9 +1607,9 @@
     }
 
     h1.display {
-      font-size: clamp(54px, 16vw, 70px);
+      font-size: clamp(44px, 13vw, 56px);
       line-height: 0.96;
-      margin: 0 0 18px;
+      margin: 0 0 8px;
       letter-spacing: -0.035em;
       white-space: nowrap;
     }
@@ -1454,33 +1617,33 @@
     h1.display::before {
       content: "Peptide Research";
       display: block;
-      margin: 0 0 18px;
+      margin: 0 0 10px;
       font-family: var(--body);
-      font-size: clamp(12px, 3.6vw, 17px);
+      font-size: clamp(9.5px, 2.6vw, 11px);
       font-weight: 500;
       line-height: 1;
-      letter-spacing: 0.34em;
+      letter-spacing: 0.32em;
       text-transform: uppercase;
       color: var(--accent);
     }
 
     .subhead {
-      margin: 0 0 20px;
-      font-size: clamp(12px, 3.4vw, 16px);
-      line-height: 1.35;
-      letter-spacing: 0.34em;
+      margin: 0 0 10px;
+      font-size: clamp(10px, 2.7vw, 12px);
+      line-height: 1.3;
+      letter-spacing: 0.32em;
       color: var(--accent);
     }
 
     .lede {
       display: block;
-      max-width: 248px;
+      max-width: 200px;
       margin: 0;
       color: #171d27;
-      font-size: clamp(16px, 4.15vw, 20px);
+      font-size: clamp(12.5px, 3.2vw, 14.5px);
       font-weight: 300;
-      line-height: 1.58;
-      letter-spacing: -0.01em;
+      line-height: 1.42;
+      letter-spacing: -0.005em;
     }
 
     .lede::before,
@@ -1489,15 +1652,15 @@
     }
 
     .features {
-      width: min(58vw, 300px);
-      max-width: 300px;
-      gap: clamp(21px, 3.1svh, 32px);
-      margin: clamp(44px, 5.6svh, 58px) 0 clamp(34px, 4.6svh, 52px);
+      width: min(48vw, 200px);
+      max-width: 200px;
+      gap: clamp(10px, 1.4svh, 14px);
+      margin: clamp(14px, 1.8svh, 20px) 0 clamp(12px, 1.6svh, 16px);
     }
 
     .feat {
-      grid-template-columns: 42px minmax(0, 1fr);
-      gap: 21px;
+      grid-template-columns: 32px minmax(0, 1fr);
+      gap: 12px;
       align-items: flex-start;
     }
 
@@ -1506,35 +1669,35 @@
     }
 
     .feat .ico {
-      width: 42px;
-      height: 42px;
+      width: 32px;
+      height: 32px;
       border-color: color-mix(in oklab, var(--accent) 68%, rgba(26,35,50,0.24));
-      border-radius: 6px;
+      border-radius: 5px;
       background: rgba(255,255,255,0.35);
       color: var(--accent);
     }
 
     .feat .ico svg {
-      width: 21px;
-      height: 21px;
+      width: 17px;
+      height: 17px;
     }
 
     .feat .copy {
       padding-top: 0;
       color: #222a35;
-      font-size: clamp(14px, 3.75vw, 18px);
+      font-size: clamp(10.5px, 2.7vw, 12px);
       font-weight: 300;
-      line-height: 1.46;
-      letter-spacing: -0.01em;
+      line-height: 1.36;
+      letter-spacing: -0.005em;
     }
 
     .qty-row {
       display: grid;
-      grid-template-columns: 186px 76px;
-      gap: 10px 18px;
+      grid-template-columns: 124px 58px;
+      gap: 6px 10px;
       align-items: end;
-      max-width: 300px;
-      margin: 0 0 18px;
+      max-width: 200px;
+      margin: 0 0 10px;
     }
 
     .qty-label {
@@ -1572,22 +1735,22 @@
     }
 
     .actions {
-      width: min(78vw, 342px);
-      max-width: 342px;
-      gap: 12px;
+      width: min(48vw, 200px);
+      max-width: 200px;
+      gap: 8px;
     }
 
     .btn-primary {
-      height: 54px;
+      height: 42px;
       background:
         linear-gradient(90deg,
           color-mix(in oklab, var(--accent) 88%, #ffffff 12%),
           color-mix(in oklab, var(--accent) 70%, #ffffff 30%));
       border-color: transparent;
       color: #121a26;
-      font-size: 11.5px;
-      letter-spacing: 0.31em;
-      box-shadow: 0 18px 34px rgba(55, 91, 126, 0.13);
+      font-size: 10px;
+      letter-spacing: 0.26em;
+      box-shadow: 0 12px 24px rgba(55, 91, 126, 0.13);
     }
 
     .btn-primary:hover {
@@ -1595,12 +1758,12 @@
         linear-gradient(90deg,
           color-mix(in oklab, var(--accent) 90%, #ffffff 10%),
           color-mix(in oklab, var(--accent) 74%, #ffffff 26%));
-      letter-spacing: 0.31em;
+      letter-spacing: 0.26em;
     }
 
     .btn-bag {
-      width: 54px;
-      height: 54px;
+      width: 42px;
+      height: 42px;
       background: rgba(255,255,255,0.2);
       border-color: rgba(16,17,20,0.32);
     }
@@ -1620,12 +1783,17 @@
       z-index: 8;
       display: inline-flex;
       align-items: center;
-      gap: 24px;
+      gap: 14px;
       color: var(--ink);
       font-family: var(--body);
       font-size: 16px;
       letter-spacing: 0.3em;
       text-transform: uppercase;
+    }
+
+    /* Keep the digits tight even though the row has wide tracking */
+    .mobile-bottom-nav span {
+      letter-spacing: 0;
     }
 
     .mobile-bottom-nav button {
@@ -1648,12 +1816,20 @@
       z-index: 5;
     }
 
+    /* Mobile: don't use display:none on the catalog — that would yank it out of
+       the render tree and CSS transitions on children couldn't fire when it
+       reappears (causing the entry animation to "cut in"). Keep it in the tree
+       with visibility/opacity/pointer-events so child transitions can run. */
     .catalog[aria-hidden="true"] {
-      display: none;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
     }
 
     .stage.mode-catalog .catalog[aria-hidden="false"] {
-      display: block;
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
     }
 
     .stage.mode-catalog .hero,
@@ -1792,28 +1968,75 @@
 
     .mobile-index-grid {
       position: absolute;
-      left: 22px;
-      right: 22px;
-      bottom: max(58px, calc(env(safe-area-inset-bottom) + 56px));
+      left: 0;
+      right: 0;
+      bottom: max(40px, calc(env(safe-area-inset-bottom) + 38px));
       z-index: 8;
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
       gap: 6px;
+      padding: 18px calc(50% - 38px);
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x proximity;
+      scrollbar-width: none;
       pointer-events: auto;
+      overscroll-behavior-x: contain;
+    }
+
+    .mobile-index-grid::-webkit-scrollbar {
+      display: none;
     }
 
     .mobile-index-card,
     .mobile-system-card {
+      --card-accent: #b8c3d0;
+      --proximity: 0;
+      flex: 0 0 auto;
       min-width: 0;
-      border: 1px solid rgba(255,255,255,0.82);
-      border-radius: 5px;
-      background: rgba(255,255,255,0.66);
-      backdrop-filter: blur(18px) saturate(140%);
-      -webkit-backdrop-filter: blur(18px) saturate(140%);
-      box-shadow: 0 12px 26px rgba(39, 72, 102, 0.12);
+      scroll-snap-align: center;
+      border: 1px solid rgba(255,255,255,0.42);
+      border-radius: 7px;
+      background:
+        linear-gradient(140deg, rgba(255,255,255,0.38) 0%, rgba(255,255,255,0.16) 60%, rgba(255,255,255,0.22) 100%);
+      backdrop-filter: blur(28px) saturate(175%);
+      -webkit-backdrop-filter: blur(28px) saturate(175%);
+      box-shadow:
+        0 10px 30px rgba(39, 72, 102, 0.14),
+        inset 0 1px 0 rgba(255,255,255,0.55),
+        inset 0 -1px 0 rgba(255,255,255,0.18);
+      transform: scale(calc(0.92 + var(--proximity) * 0.12)) translateY(calc(var(--proximity) * -3px));
+      opacity: calc(0.62 + var(--proximity) * 0.38);
+      transform-origin: center bottom;
+      will-change: transform, opacity, background;
+      transition:
+        box-shadow 0.55s cubic-bezier(.32,.72,.24,1),
+        background 0.55s cubic-bezier(.32,.72,.24,1),
+        border-color 0.5s ease;
+    }
+
+    .mobile-index-card.is-active,
+    .mobile-system-card.is-active {
+      border-color: color-mix(in oklab, var(--card-accent) 55%, rgba(255,255,255,0.6));
+      background:
+        radial-gradient(120% 110% at 50% 55%,
+          color-mix(in oklab, var(--card-accent) 58%, rgba(255,255,255,0.6)) 0%,
+          color-mix(in oklab, var(--card-accent) 32%, rgba(255,255,255,0.55)) 42%,
+          color-mix(in oklab, var(--card-accent) 14%, rgba(255,255,255,0.4)) 72%,
+          rgba(255,255,255,0.32) 100%),
+        linear-gradient(140deg, rgba(255,255,255,0.42) 0%, rgba(255,255,255,0.18) 60%, rgba(255,255,255,0.26) 100%);
+      box-shadow:
+        0 14px 36px rgba(39, 72, 102, 0.18),
+        inset 0 1px 0 rgba(255,255,255,0.65),
+        inset 0 -1px 0 rgba(255,255,255,0.22),
+        0 0 0 1px color-mix(in oklab, var(--card-accent) 38%, transparent),
+        0 0 42px 8px color-mix(in oklab, var(--card-accent) 50%, transparent);
     }
 
     .mobile-index-card {
+      width: 76px;
       min-height: 94px;
       padding: 9px 4px 8px;
       color: var(--ink);
@@ -1852,7 +2075,7 @@
     }
 
     .mobile-system-card {
-      grid-column: 3 / 6;
+      width: 232px;
       min-height: 94px;
       padding: 12px 14px;
       display: grid;
@@ -1860,6 +2083,7 @@
       column-gap: 14px;
       align-items: center;
       color: var(--ink);
+      text-decoration: none;
     }
 
     .mobile-system-card .sc {
@@ -2020,11 +2244,13 @@
     }
 
     .mobile-index-grid {
-      bottom: 42px;
+      bottom: 28px;
       gap: 5px;
+      padding: 14px calc(50% - 35px);
     }
 
     .mobile-index-card {
+      width: 70px;
       min-height: 76px;
       grid-template-rows: 30px auto 12px;
       padding: 7px 4px 6px;
@@ -2044,6 +2270,7 @@
     }
 
     .mobile-system-card {
+      width: 208px;
       min-height: 86px;
       padding: 11px 13px;
     }
@@ -2060,12 +2287,12 @@
     }
 
     .topbar {
-      padding: max(17px, calc(env(safe-area-inset-top) + 13px)) 18px 0 15px;
+      padding: max(17px, calc(env(safe-area-inset-top) + 13px)) 14px 0 11px;
     }
 
     .brand-logo {
-      width: min(40vw, 142px);
-      transform: translate(-13px, -3px);
+      width: min(43vw, 152px);
+      transform: translate(-27%, -3px);
     }
 
     .mobile-menu {
@@ -2075,13 +2302,13 @@
     }
 
     .hero {
-      padding-top: max(86px, calc(env(safe-area-inset-top) + 78px));
+      padding-top: max(68px, calc(env(safe-area-inset-top) + 60px));
       padding-left: 22px;
     }
 
     .panel {
-      width: min(57vw, 232px);
-      max-width: 232px;
+      width: min(52vw, 184px);
+      max-width: 184px;
     }
 
     .section-id {
@@ -2233,13 +2460,15 @@
     }
 
     .mobile-index-grid {
-      left: 15px;
-      right: 15px;
-      bottom: max(35px, calc(env(safe-area-inset-bottom) + 35px));
+      left: 0;
+      right: 0;
+      bottom: max(22px, calc(env(safe-area-inset-bottom) + 22px));
       gap: 4px;
+      padding: 13px calc(50% - 32px);
     }
 
     .mobile-index-card {
+      width: 64px;
       min-height: 68px;
       grid-template-rows: 26px auto 10px;
       padding: 6px 3px 5px;
@@ -2259,6 +2488,7 @@
     }
 
     .mobile-system-card {
+      width: 188px;
       min-height: 76px;
       padding: 9px 10px;
       grid-template-columns: 25px minmax(0, 1fr);
@@ -2284,14 +2514,14 @@
 
     .panel.is-out-fwd [data-stagger],
     .panel.is-out-bwd [data-stagger] {
-      transition-duration: 0.22s;
-      transition-delay: calc(var(--i, 0) * 12ms);
+      transition-duration: 0.32s;
+      transition-delay: calc(var(--i, 0) * 18ms);
     }
 
     .panel.is-entering [data-stagger],
     .panel.is-entering .display {
-      transition-duration: 0.42s;
-      transition-delay: calc(var(--i, 0) * 28ms);
+      transition-duration: 0.60s;
+      transition-delay: calc(var(--i, 0) * 42ms);
     }
   }
 </style>
@@ -2333,11 +2563,19 @@
       <a href="#">Research</a>
       <a href="#">Account</a>
     </nav>
-    <button class="mobile-menu" id="mobileMenu" type="button" aria-label="Open mobile catalog menu">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
+    <div class="nav-actions">
+      <a href="#cart" class="nav-cart" aria-label="Shopping cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 8h14l-1.4 10.7a2 2 0 0 1-2 1.75H8.4a2 2 0 0 1-2-1.75L5 8Z"/>
+          <path d="M9 8V6a3 3 0 1 1 6 0v2"/>
+        </svg>
+      </a>
+      <button class="mobile-menu" id="mobileMenu" type="button" aria-label="Open mobile catalog menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
   </header>
 
   <section class="hero">
@@ -2423,8 +2661,10 @@
     <img class="catalog-bottle" id="catalogBottleGhkcu" data-target="1" alt="" />
     <img class="catalog-bottle" id="catalogBottleTb500" data-target="2" alt="" />
 
-    <!-- Catalog header in the upper area -->
-    <header class="catalog-header" data-c-stagger style="--i: 0">
+    <!-- Catalog header in the upper area.
+         No data-c-stagger on the header itself — each child has its own
+         premium entry animation so they don't fight with a parent fade. -->
+    <header class="catalog-header">
       <span class="catalog-eyebrow">04 / 04 &mdash; Index</span>
       <h2 class="catalog-title">All Compounds</h2>
       <p class="catalog-sub">Three protocols for systemic repair. Select one to view its profile.</p>
@@ -2529,49 +2769,79 @@
       </a>
     </div>
 
-    <div class="mobile-index-grid" aria-label="Featured mobile catalog compounds">
-      <a class="mobile-index-card" href="#bpc-157" data-mobile-target="0">
+    <div class="mobile-index-grid" aria-label="All catalog compounds">
+      <a class="mobile-index-card" href="landing/catalog.html#bpc-157" style="--card-accent:#9eb5d1">
         <img src="assets/catalog-before-hover/Photoroom_20260513_001352.PNG" alt="BPC-157 vial" loading="lazy" />
         <span>BPC-157</span>
         <i aria-hidden="true">+</i>
       </a>
-      <a class="mobile-index-card" href="#ghk-cu" data-mobile-target="1">
-        <img src="assets/catalog-before-hover/Photoroom_20260513_001459.PNG" alt="GHK-CU vial" loading="lazy" />
+      <a class="mobile-index-card" href="landing/catalog.html#ghk-cu" style="--card-accent:#c5b3da">
+        <img src="assets/catalog-before-hover/Photoroom_20260513_001459.PNG" alt="GHK-Cu vial" loading="lazy" />
         <span>GHK-CU</span>
         <i aria-hidden="true">+</i>
       </a>
-      <a class="mobile-index-card" href="#tb-500" data-mobile-target="2">
+      <a class="mobile-index-card" href="landing/catalog.html#tb-500" style="--card-accent:#c9a87b">
         <img src="assets/catalog-before-hover/Photoroom_20260513_001516.PNG" alt="TB-500 vial" loading="lazy" />
         <span>TB-500</span>
         <i aria-hidden="true">+</i>
       </a>
-      <a class="mobile-index-card" href="landing/catalog.html#ejc-1295">
-        <img src="assets/catalog-before-hover/Photoroom_20260513_001610.PNG" alt="EJC-1295 vial" loading="lazy" />
-        <span>EJC-1295</span>
+      <a class="mobile-index-card" href="landing/catalog.html#cjc-ipamorelin" style="--card-accent:#6b8caa">
+        <img src="assets/catalog-before-hover/Photoroom_20260513_001610.PNG" alt="CJC-1295 with Ipamorelin vial" loading="lazy" />
+        <span>CJC / IPA</span>
         <i aria-hidden="true">+</i>
       </a>
-      <a class="mobile-index-card" href="landing/catalog.html#ipamorelin">
-        <img src="assets/catalog-before-hover/Photoroom_20260513_001538.PNG" alt="Ipamorelin vial" loading="lazy" />
-        <span>IPAMORELIN</span>
+      <a class="mobile-index-card" href="landing/catalog.html#tesamorelin" style="--card-accent:#c3cdd8">
+        <img src="assets/catalog-before-hover/Photoroom_20260513_001538.PNG" alt="Tesamorelin vial" loading="lazy" />
+        <span>TESAMORELIN</span>
         <i aria-hidden="true">+</i>
       </a>
-      <a class="mobile-index-card" href="landing/catalog.html#mots-c">
-        <img src="assets/catalog-before-hover/Photoroom_20260513_001749.PNG" alt="MOTS-C vial" loading="lazy" />
+      <a class="mobile-index-card" href="landing/catalog.html#igf-lr3" style="--card-accent:#a8c8b8">
+        <img src="assets/catalog-before-hover/Photoroom_20260513_001629.PNG" alt="IGF-LR3 vial" loading="lazy" />
+        <span>IGF-LR3</span>
+        <i aria-hidden="true">+</i>
+      </a>
+      <a class="mobile-index-card" href="landing/catalog.html#mots-c" style="--card-accent:#c89e9e">
+        <img src="assets/catalog-before-hover/Photoroom_20260513_001749.PNG" alt="MOTS-c vial" loading="lazy" />
         <span>MOTS-C</span>
         <i aria-hidden="true">+</i>
       </a>
-      <a class="mobile-index-card" href="landing/catalog.html#glow">
+      <a class="mobile-index-card" href="landing/catalog.html#5-amino-1mq" style="--card-accent:#d4bb98">
+        <img src="assets/catalog-before-hover/Photoroom_20260513_001555.PNG" alt="5-Amino-1MQ vial" loading="lazy" />
+        <span>5-AMINO-1MQ</span>
+        <i aria-hidden="true">+</i>
+      </a>
+      <a class="mobile-index-card" href="landing/catalog.html#glp-3" style="--card-accent:#9eb8c5">
+        <img src="assets/catalog-before-hover/Photoroom_20260513_001702.PNG" alt="GLP-3 vial" loading="lazy" />
+        <span>GLP-3</span>
+        <i aria-hidden="true">+</i>
+      </a>
+      <a class="mobile-index-card" href="landing/catalog.html#glow" style="--card-accent:#e6c896">
         <img src="assets/catalog-before-hover/Photoroom_20260513_001644.PNG" alt="GLOW vial" loading="lazy" />
         <span>GLOW</span>
         <i aria-hidden="true">+</i>
       </a>
-      <div class="mobile-system-card" aria-label="Peptide system note">
+      <a class="mobile-index-card" href="landing/catalog.html#klow" style="--card-accent:#c8a8b8">
+        <img src="assets/catalog-before-hover/Photoroom_20260513_001732.PNG" alt="KLOW vial" loading="lazy" />
+        <span>KLOW</span>
+        <i aria-hidden="true">+</i>
+      </a>
+      <a class="mobile-index-card" href="landing/catalog.html#nad" style="--card-accent:#b5c79f">
+        <img src="assets/catalog-before-hover/Photoroom_20260513_001815.PNG" alt="NAD+ vial" loading="lazy" />
+        <span>NAD+</span>
+        <i aria-hidden="true">+</i>
+      </a>
+      <a class="mobile-index-card" href="landing/catalog.html#sera-h2o" style="--card-accent:#a8cce0">
+        <img src="assets/catalog-before-hover/Photoroom_20260513_001833.PNG" alt="SERA H2O vial" loading="lazy" />
+        <span>SERA H2O</span>
+        <i aria-hidden="true">+</i>
+      </a>
+      <a class="mobile-system-card" href="landing/catalog.html" aria-label="Peptide system note — see all compounds" style="--card-accent:#c8c0b5">
         <span class="sc">SC</span>
         <span>
           <b>Peptide System</b>
           <p>All compounds are research use only and manufactured to the highest standards of purity and consistency.</p>
         </span>
-      </div>
+      </a>
     </div>
 
     <!-- Click hit-areas + labels for each bottle -->
@@ -3545,8 +3815,13 @@
   ];
   const MOBILE_VIDEO_MAX_RATE = 3.6;
   const MOBILE_VIDEO_REVERSE_MAX_RATE = 3.6;
-  const MOBILE_VIDEO_FORWARD_TARGET_SECONDS = 2.4;
-  const MOBILE_VIDEO_REVERSE_TARGET_SECONDS = 2.4;
+  const MOBILE_VIDEO_FORWARD_TARGET_SECONDS = 2.28;
+  const MOBILE_VIDEO_REVERSE_TARGET_SECONDS = 2.28;
+  // Per-transition target overrides (null = use default). Index aligns with the
+  // MOBILE_TRANSITION_VIDEOS arrays. Bump a value to slow a specific transition
+  // that feels rushed even at the default pace.
+  const MOBILE_FORWARD_TARGET_OVERRIDES = [null, 3.04, null]; // 02→03 gets more breathing room
+  const MOBILE_REVERSE_TARGET_OVERRIDES = [null, 3.04, null];
 
   const stageEl = document.getElementById('stage');
   const catalogEl = document.getElementById('catalog');
@@ -3685,10 +3960,10 @@
   function getPanelTiming() {
     if (isCompactPhoneLayout()) {
       return {
-        exitDur: 220,
-        exitStag: 12,
-        enterDur: 420,
-        enterStag: 28,
+        exitDur: 320,
+        exitStag: 18,
+        enterDur: 600,
+        enterStag: 42,
       };
     }
     return {
@@ -3786,7 +4061,11 @@
   function playMobileTransitionSegment(segment, token) {
     const video = els.mobileVideo;
     if (!video) return Promise.resolve(false);
-    setMobileFallbackFrame(segment.reverse ? segment.to : segment.from);
+    // IMG underneath stays on the FROM state until the video finishes —
+    // this matches the video's first frame for both directions, so the
+    // opacity fade-in shows the same bottle from IMG and video (no double-bottle glitch).
+    // finish() will swap it to segment.to after the video pauses.
+    setMobileFallbackFrame(segment.from);
     setMobileTransitionSource(segment.src);
 
     return whenMobileVideoReady().then(() => new Promise(resolve => {
@@ -3817,7 +4096,10 @@
         video.pause();
         video.currentTime = 0;
         const duration = video.duration || 8;
-        const targetSeconds = segment.reverse ? MOBILE_VIDEO_REVERSE_TARGET_SECONDS : MOBILE_VIDEO_FORWARD_TARGET_SECONDS;
+        const segmentIdx = segment.reverse ? segment.from - 1 : segment.from;
+        const overrides = segment.reverse ? MOBILE_REVERSE_TARGET_OVERRIDES : MOBILE_FORWARD_TARGET_OVERRIDES;
+        const defaultTarget = segment.reverse ? MOBILE_VIDEO_REVERSE_TARGET_SECONDS : MOBILE_VIDEO_FORWARD_TARGET_SECONDS;
+        const targetSeconds = overrides[segmentIdx] ?? defaultTarget;
         const maxRate = segment.reverse ? MOBILE_VIDEO_REVERSE_MAX_RATE : MOBILE_VIDEO_MAX_RATE;
         video.playbackRate = Math.min(maxRate, Math.max(1, duration / targetSeconds));
         video.classList.add('is-playing');
@@ -3832,8 +4114,10 @@
       const monitor = now => {
         if (token !== mobileVideoToken) return;
         const duration = video.duration || 8;
-        const maxRate = segment.reverse ? MOBILE_VIDEO_REVERSE_MAX_RATE : MOBILE_VIDEO_MAX_RATE;
-        const timedOut = now - startAt > Math.max(1100, (duration / maxRate) * 1000 + 560);
+        const currentRate = video.playbackRate || 1;
+        // Use live playbackRate so per-transition overrides don't trip the watchdog.
+        const expectedMs = (duration / currentRate) * 1000;
+        const timedOut = now - startAt > Math.max(1100, expectedMs + 560);
         if (video.ended || video.currentTime >= duration - 0.08 || timedOut) {
           finish(true);
           return;
@@ -3931,27 +4215,66 @@
     const preInClass = `is-pre-in-${direction}`;
     const fromCatalog = fromIndex === CATALOG_INDEX;
     const toCatalog = index === CATALOG_INDEX;
+    // catalog → BPC and catalog → GHK would chain 3 / 2 reverse videos back to back.
+    // iOS Safari flashes black between each video.src swap, which reads as a glitch.
+    // Skip the video chain entirely for these jumps: swap the IMG underneath the
+    // catalog ahead of time so it crossfades from catalog → destination still as
+    // the catalog opacity drops to 0. Catalog → TB-500 is a single segment, so it
+    // keeps the normal video transition.
+    const skipCatalogReverseVideo = fromCatalog && !toCatalog && index < CATALOG_INDEX - 1;
     const timing = getPanelTiming();
     const exitTotal = timing.exitDur + (STAGGER_COUNT - 1) * timing.exitStag;
-    const animationDone = animateMobileVideoTo(fromIndex, index);
+    let animationDone;
+    if (skipCatalogReverseVideo) {
+      setMobileFallbackFrame(index);
+      animationDone = Promise.resolve();
+    } else {
+      animationDone = animateMobileVideoTo(fromIndex, index);
+    }
 
     stageEl.classList.add('is-video-priority');
 
     if (toCatalog && !fromCatalog) {
       els.panel.classList.add(outClass);
-      await Promise.all([delay(exitTotal), animationDone]);
-      if (mobileNavToken !== transitionToken) return;
 
-      applyAccent({
+      // Pre-trigger the catalog UI entrance while the video is still in its
+      // last ~900ms (real-time). The catalog div is transparent except for its
+      // children, so the eyebrow/title/cards animate in over the video's final
+      // motion — feels layered instead of "video ends, then UI appears".
+      const catalogAccent = {
         accent: '#4d7aa7',
         accentDeep: '#2f5680',
         accentGlow: 'rgba(77,122,167,0.18)',
         accentInk: '#f6f9fc',
-      });
+      };
+      let catalogModeArmed = false;
+      const armCatalogMode = () => {
+        if (catalogModeArmed) return;
+        catalogModeArmed = true;
+        if (mobileNavToken !== transitionToken) return;
+        applyAccent(catalogAccent);
+        stageEl.classList.add('mode-catalog');
+        catalogEl.setAttribute('aria-hidden', 'false');
+      };
+      const onVideoTimeUpdate = () => {
+        const v = els.mobileVideo;
+        if (!v || !v.duration || !isFinite(v.duration)) return;
+        const remainingMs = ((v.duration - v.currentTime) / (v.playbackRate || 1)) * 1000;
+        if (remainingMs <= 900) {
+          v.removeEventListener('timeupdate', onVideoTimeUpdate);
+          armCatalogMode();
+        }
+      };
+      if (els.mobileVideo) els.mobileVideo.addEventListener('timeupdate', onVideoTimeUpdate);
+
+      await Promise.all([delay(exitTotal), animationDone]);
+      if (els.mobileVideo) els.mobileVideo.removeEventListener('timeupdate', onVideoTimeUpdate);
+      if (mobileNavToken !== transitionToken) return;
+
+      // Fallback in case the pre-trigger didn't fire (e.g. no timeupdate events).
+      armCatalogMode();
       currentIndex = index;
       stageEl.classList.remove('is-video-priority');
-      stageEl.classList.add('mode-catalog');
-      catalogEl.setAttribute('aria-hidden', 'false');
       setMobileFallbackFrame(index);
       updateDots();
       updateBrowseCta();
@@ -4372,4 +4695,71 @@
 
   initBlobCursor();
   init();
+
+  // ------------------------------------------------------------------
+  // Mobile index grid — scroll-driven active card + proximity wheel
+  // Each card gets a --proximity value (0 far, 1 centered) so scale/opacity
+  // glide continuously as you swipe. The card closest to center also gets
+  // .is-active for the colored studio glow.
+  // ------------------------------------------------------------------
+  (function setupMobileIndexActive() {
+    const grid = document.querySelector('.mobile-index-grid');
+    if (!grid) return;
+    const cards = Array.from(grid.children).filter(el =>
+      el.classList.contains('mobile-index-card') || el.classList.contains('mobile-system-card')
+    );
+    if (!cards.length) return;
+
+    let activeCard = null;
+    let raf = null;
+
+    const updateProximity = () => {
+      raf = null;
+      const rect = grid.getBoundingClientRect();
+      if (rect.width === 0) return;
+      const centerX = rect.left + rect.width / 2;
+      // Falloff window — cards beyond this distance read as fully "far".
+      // Smaller window = punchier focus; larger = gentler wheel.
+      const falloff = rect.width * 0.42;
+      let nearest = null;
+      let nearestDist = Infinity;
+      for (const card of cards) {
+        const r = card.getBoundingClientRect();
+        const cc = r.left + r.width / 2;
+        const d = Math.abs(centerX - cc);
+        // Smoothstep curve so neighbours ease, not linearly drop.
+        const t = Math.max(0, Math.min(1, 1 - d / falloff));
+        const eased = t * t * (3 - 2 * t);
+        card.style.setProperty('--proximity', eased.toFixed(3));
+        if (d < nearestDist) {
+          nearestDist = d;
+          nearest = card;
+        }
+      }
+      if (nearest && nearest !== activeCard) {
+        if (activeCard) activeCard.classList.remove('is-active');
+        nearest.classList.add('is-active');
+        activeCard = nearest;
+      }
+    };
+
+    const scheduleUpdate = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(updateProximity);
+    };
+
+    grid.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate);
+
+    const catalogContainer = document.getElementById('catalog');
+    if (catalogContainer) {
+      new MutationObserver(() => {
+        if (catalogContainer.getAttribute('aria-hidden') === 'false') {
+          requestAnimationFrame(() => requestAnimationFrame(scheduleUpdate));
+        }
+      }).observe(catalogContainer, { attributes: true, attributeFilter: ['aria-hidden'] });
+    }
+
+    requestAnimationFrame(scheduleUpdate);
+  })();
 </script>

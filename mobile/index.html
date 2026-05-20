@@ -10,24 +10,17 @@
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Onest:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./mobile.css?v=20260516a" />
+    <link rel="stylesheet" href="../shared/site.css?v=20260519nav4" />
+    <link rel="stylesheet" href="./mobile.css?v=20260519nav4" />
   </head>
-  <body class="mobile-landing">
+  <body class="mobile-landing" data-page="home">
+
+    <header id="site-nav"></header>
     <main class="landing-shell" aria-label="sera club mobile landing">
       <video class="landing-video" autoplay muted loop playsinline preload="auto" poster="../assets/mobile/catalog-04-index.png">
         <source src="../assets/mobile/landing-mobile.mov" type="video/quicktime" />
       </video>
       <div class="landing-wash" aria-hidden="true"></div>
-
-      <header class="mobile-topbar">
-        <a class="brand" href="./index.html" aria-label="sera club home">
-          <span class="brand-mark">sera &#10022; club</span>
-          <span class="brand-sub">peptide research</span>
-        </a>
-        <button class="hamburger" type="button" aria-label="Open menu">
-          <span></span><span></span><span></span>
-        </button>
-      </header>
 
       <section class="landing-copy">
         <p class="kicker"><span></span> mobile research catalog</p>
@@ -43,6 +36,8 @@
         </div>
       </section>
     </main>
+    <footer id="site-footer"></footer>
     <script src="./mobile.js?v=20260516a"></script>
+    <script src="../shared/site.js?v=20260519nav4" defer></script>
   </body>
 </html>

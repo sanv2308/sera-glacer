@@ -10,7 +10,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@200;300;400;500;600&family=Manrope:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
 
-<link rel="stylesheet" href="landing.css" />
+<link rel="stylesheet" href="../shared/site.css?v=20260519nav4" />
+<link rel="stylesheet" href="landing.css?glacier=20260519nav4" />
 <link rel="stylesheet" href="catalog.css?v=dense-catalog-2" />
 <style>
   .catalog-page.is-sliding-in { transform: translateX(100vw); }
@@ -38,7 +39,9 @@
   })();
 </script>
 </head>
-<body class="catalog-page">
+<body class="catalog-page" data-page="catalog-legacy">
+
+<header id="site-nav"></header>
 
 <svg class="filter-defs" aria-hidden="true">
   <filter id="catalog-grain">
@@ -52,18 +55,6 @@
     <rect width="100%" height="100%" filter="url(#catalog-grain)" opacity="0.05"></rect>
   </svg>
 </div>
-
-<header class="topbar catalog-topbar">
-  <a class="brand" href="index.html" aria-label="SERA, peptide research">
-    <img class="brand-logo" src="../sera-logo.png" alt="SERA" />
-  </a>
-  <nav class="navlinks" aria-label="Primary">
-    <a href="catalog.html" class="is-active">Catalog</a>
-    <a href="#protocols">Protocols</a>
-    <a href="#research">Research</a>
-    <a href="#account" class="nav-signin">Sign in <span aria-hidden="true">→</span></a>
-  </nav>
-</header>
 
 <!-- Catalog header — editorial, table-of-contents tone -->
 <section class="cat-header">
@@ -478,6 +469,9 @@
   <span class="foot-id">SR · INDEX · 13 / 13</span>
 </footer>
 
+<footer id="site-footer"></footer>
+
 <script src="catalog.js" defer></script>
+<script src="../shared/site.js?v=20260519nav4" defer></script>
 </body>
 </html>

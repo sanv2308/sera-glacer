@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Contact · Sera Labs</title>
+<meta name="description" content="Get in touch with Sera Labs for research inquiries, batch documentation, and protocol questions." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@200;300;400;500;600&family=Manrope:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="shared/site.css?v=20260519nav4" />
+</head>
+<body class="page-body" data-page="contact">
+
+<header id="site-nav"></header>
+
+<main class="page">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="index.html">Home</a>
+    <span aria-hidden="true">/</span>
+    <span aria-current="page">Contact</span>
+  </nav>
+
+  <h1 class="page-title">Get in touch.</h1>
+  <p class="page-intro">
+    Research inquiries, batch documentation, and protocol questions. We read every message.
+  </p>
+
+  <section class="page-section">
+    <form class="form-stack" onsubmit="event.preventDefault(); alert('Message received. We will reply within 1 business day.'); this.reset();">
+      <label>
+        Name
+        <input type="text" name="name" placeholder="Your name" required />
+      </label>
+      <label>
+        Email
+        <input type="email" name="email" placeholder="you@research.org" required />
+      </label>
+      <label>
+        Message
+        <textarea name="message" placeholder="Tell us about your research focus or specific question..." required></textarea>
+      </label>
+      <button type="submit">Send message</button>
+    </form>
+  </section>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="shared/site.js?v=20260519nav4" defer></script>
+</body>
+</html>
